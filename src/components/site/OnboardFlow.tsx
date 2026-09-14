@@ -111,6 +111,13 @@ export function OnboardFlow() {
         allowance: BigInt(Math.round(allowance * 1_000_000)),
         periodInDays: 7,
         end: new Date(Date.now() + 90 * 86_400_000),
+        // Force the wallet_sign path and ask the wallet to sponsor the on-chain
+        // approval through our CDP paymaster proxy. The SDK type only declares
+        // spendPermission, so we widen it to include paymasterService.
+        capabilities: {
+          spendPermission: { requireBalance: false },
+          paymasterService: { url: `${window.location.origin}/api/paymaster` },
+        } as never,
       })) as unknown as SdkPermission;
       setPermission(perm);
       setStep("rules");
