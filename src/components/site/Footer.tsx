@@ -32,7 +32,7 @@ export function Footer() {
             work within minutes.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-            <ButtonLink href="/onboard" variant="primary">Open a room</ButtonLink>
+            <ButtonLink href="/open" variant="primary">Open a room</ButtonLink>
             <ButtonLink href="/room" variant="secondary">See the room →</ButtonLink>
           </div>
         </div>
@@ -53,8 +53,9 @@ export function Footer() {
               <div className="flex flex-col gap-3">
                 <div className="eyebrow text-fog">Product</div>
                 <FootLink href="/room">Room</FootLink>
+                <FootLink href="/onboard">Onboard</FootLink>
                 <FootLink href="/proof">Proof</FootLink>
-                <FootLink href="/onboard">Open a room</FootLink>
+                <FootLink href="/open">Open a room</FootLink>
               </div>
               <div className="flex flex-col gap-3">
                 <div className="eyebrow text-fog">Code</div>

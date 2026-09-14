@@ -19,7 +19,7 @@ export async function Hero() {
           within minutes, refuses farmers in public, and can never spend past your weekly cap.
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-          <ButtonLink href="/onboard" variant="primary">Open a room</ButtonLink>
+          <ButtonLink href="/open" variant="primary">Open a room</ButtonLink>
           <ButtonLink href="/room" variant="secondary">See the room →</ButtonLink>
         </div>
       </div>
