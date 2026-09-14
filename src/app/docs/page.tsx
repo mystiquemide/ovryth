@@ -1,5 +1,4 @@
 import { Nav } from "@/components/site/Nav";
-import { Footer } from "@/components/site/Footer";
 
 export const metadata = { title: "Docs · Ovryth" };
 
@@ -142,7 +141,6 @@ export default function DocsPage() {
           </div>
         </div>
       </main>
-      <Footer />
     </>
   );
 }
