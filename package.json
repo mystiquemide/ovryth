@@ -7,6 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "env:check": "tsx scripts/env-check.ts",
     "fixture:scorer": "tsx scripts/fixture-scorer.ts",
     "base:create": "tsx scripts/create-base-account.ts",
@@ -33,6 +35,7 @@
     "eslint-config-next": "16.3.4",
     "tailwindcss": "^4",
     "tsx": "^4.20.3",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "4.1.11"
   }
 }
