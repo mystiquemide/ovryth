@@ -8,14 +8,19 @@
     "start": "next start",
     "lint": "eslint",
     "env:check": "tsx scripts/env-check.ts",
-    "fixture:scorer": "tsx scripts/fixture-scorer.ts"
+    "fixture:scorer": "tsx scripts/fixture-scorer.ts",
+    "base:create": "tsx scripts/create-base-account.ts",
+    "spike:spend": "tsx scripts/spike-spend-permission.ts",
+    "debug:spend": "tsx scripts/debug-spend.ts"
   },
   "dependencies": {
+    "@base-org/account": "2.5.10",
     "@google/genai": "^2.19.0",
     "groq-sdk": "^1.6.0",
     "next": "16.3.4",
     "react": "19.2.8",
     "react-dom": "19.2.8",
+    "viem": "2.56.3",
     "zod": "^4.4.3"
   },
   "devDependencies": {
