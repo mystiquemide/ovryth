@@ -41,6 +41,7 @@ export const SPEND_PERMISSION_MANAGER_ABI = [
       },
     ],
   },
+  { name: "approve", type: "function", stateMutability: "nonpayable", inputs: [SP_TUPLE], outputs: [{ type: "bool" }] },
   { name: "approveWithSignature", type: "function", stateMutability: "nonpayable", inputs: [SP_TUPLE, { name: "signature", type: "bytes" }], outputs: [{ type: "bool" }] },
   { name: "spend", type: "function", stateMutability: "nonpayable", inputs: [SP_TUPLE, { name: "value", type: "uint160" }], outputs: [] },
 ] as const;

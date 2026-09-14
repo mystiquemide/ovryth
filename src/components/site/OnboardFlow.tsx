@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { getAddress, toHex, type Hex } from "viem";
+import { encodeFunctionData, getAddress, toHex, type Hex } from "viem";
 import { Button } from "@/components/ui/Button";
 import { StatusBanner } from "@/components/ui/StatusBanner";
 import { AddressDisplay } from "@/components/ui/AddressDisplay";
 import { computePermissionHash, type SpendPermission } from "@/lib/chain/permission";
-import { PAYER_ADDRESS, USDC, CHAIN_ID } from "@/lib/chain/config";
+import { SPEND_PERMISSION_MANAGER_ABI } from "@/lib/chain/abis";
+import { PAYER_ADDRESS, USDC, CHAIN_ID, SPEND_PERMISSION_MANAGER } from "@/lib/chain/config";
 
 type Step = "connect" | "budget" | "rules" | "link" | "done";
 type Provider = { request: (a: { method: string; params?: unknown[] }) => Promise<unknown> };
@@ -20,6 +21,83 @@ interface SdkPermission {
 
 function ownerMessage(hash: string, issuedAt: string) {
   return ["Ovryth room authorization", "action: create-room", `resource: ${hash}`, `issuedAt: ${issuedAt}`].join("\n");
+}
+
+function randomSalt(): Hex {
+  const bytes = new Uint8Array(32);
+  crypto.getRandomValues(bytes);
+  return `0x${Array.from(bytes).map((b) => b.toString(16).padStart(2, "0")).join("")}`;
+}
+
+// Poll wallet_getCallsStatus until the sponsored user op confirms (or give up).
+async function waitForCalls(provider: Provider, id: string) {
+  for (let i = 0; i < 24; i++) {
+    try {
+      const res = (await provider.request({ method: "wallet_getCallsStatus", params: [id] })) as {
+        status?: number | string;
+        receipts?: unknown[];
+      };
+      const status = typeof res?.status === "string" ? Number(res.status) : res?.status;
+      if ((res?.receipts && res.receipts.length > 0) || status === 200) return;
+      if (status && status >= 400) throw new Error("approval transaction failed");
+    } catch (e) {
+      if (e instanceof Error && e.message === "approval transaction failed") throw e;
+    }
+    await new Promise((r) => setTimeout(r, 1500));
+  }
+}
+
+// Approve the spend permission on chain by calling SpendPermissionManager.approve()
+// from the account itself (msg.sender == permission.account, so no signature needed).
+// We send it as a sponsored wallet_sendCalls user op through our CDP paymaster proxy,
+// which is the only path where an app-supplied paymaster is honored; the hosted
+// "Allow Spend Permission" consent screen ignores it and bills the user ETH.
+async function approveOnchain(provider: Provider, account: string, allowance: number): Promise<SdkPermission> {
+  const start = Math.floor(Date.now() / 1000);
+  const end = start + 90 * 86_400;
+  const perm = {
+    account: getAddress(account),
+    spender: getAddress(PAYER_ADDRESS!),
+    token: getAddress(USDC),
+    allowance: BigInt(Math.round(allowance * 1_000_000)),
+    period: 7 * 86_400,
+    start,
+    end,
+    salt: BigInt(randomSalt()),
+    extraData: "0x" as Hex,
+  };
+  const data = encodeFunctionData({ abi: SPEND_PERMISSION_MANAGER_ABI, functionName: "approve", args: [perm] });
+  const callsId = (await provider.request({
+    method: "wallet_sendCalls",
+    params: [
+      {
+        version: "1.0",
+        chainId: BASE_HEX,
+        from: getAddress(account),
+        atomicRequired: true,
+        calls: [{ to: SPEND_PERMISSION_MANAGER, data, value: "0x0" }],
+        capabilities: { paymasterService: { url: `${window.location.origin}/api/paymaster` } },
+      },
+    ],
+  })) as string | { id?: string };
+  const id = typeof callsId === "string" ? callsId : callsId?.id;
+  if (id) await waitForCalls(provider, id);
+  // Already approved on chain, so no owner signature is needed at payout time.
+  return {
+    signature: "0x",
+    chainId: CHAIN_ID,
+    permission: {
+      account: perm.account,
+      spender: perm.spender,
+      token: perm.token,
+      allowance: perm.allowance.toString(),
+      period: perm.period,
+      start: perm.start,
+      end: perm.end,
+      salt: perm.salt.toString(),
+      extraData: perm.extraData,
+    },
+  };
 }
 
 export function OnboardFlow() {
@@ -101,25 +179,7 @@ export function OnboardFlow() {
     setBusy(true);
     try {
       const provider = await getProvider();
-      const { requestSpendPermission } = await import("@base-org/account/spend-permission/browser");
-      const perm = (await requestSpendPermission({
-        provider: provider as never,
-        account,
-        spender: PAYER_ADDRESS!,
-        token: USDC,
-        chainId: CHAIN_ID,
-        allowance: BigInt(Math.round(allowance * 1_000_000)),
-        periodInDays: 7,
-        end: new Date(Date.now() + 90 * 86_400_000),
-        // Force the wallet_sign path and ask the wallet to sponsor the on-chain
-        // approval through our CDP paymaster proxy. The SDK type only declares
-        // spendPermission, so we widen it to include paymasterService.
-        capabilities: {
-          spendPermission: { requireBalance: false },
-          paymasterService: { url: `${window.location.origin}/api/paymaster` },
-        } as never,
-      })) as unknown as SdkPermission;
-      setPermission(perm);
+      setPermission(await approveOnchain(provider, account, allowance));
       setStep("rules");
     } catch (e) {
       setError(errMsg(e));
