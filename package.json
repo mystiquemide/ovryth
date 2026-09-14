@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@base-org/account": "2.5.10",
+    "@fontsource/open-runde": "5.3.0",
     "@google/genai": "^2.19.0",
     "@prisma/adapter-pg": "7.10.0",
     "@prisma/client": "7.10.0",

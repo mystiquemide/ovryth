@@ -1,26 +1,113 @@
 @import "tailwindcss";
 
+/* Ovryth design tokens - trustworthy fintech (Acctual-inspired), light theme. */
+@theme {
+  /* Neutrals / surfaces */
+  --color-paper: #ffffff;
+  --color-snow: #fafafa;
+  --color-ink: #1e1e1e;
+  --color-carbon: #0f0f0f;
+  --color-midnight: #0d111b;
+  --color-smoke: #666666;
+  --color-fog: #8d8d8d;
+  --color-ash: #999999;
+  --color-mist: #ccd1da;
+  --color-concrete: #afb0b1;
+
+  /* Accent (functional punctuation only) */
+  --color-electric: #0098f2;
+  --color-ice: #cfeafa;
+
+  /* Verdict colors - only ever shown with a word + glyph */
+  --color-paid: #5d9c06;
+  --color-refused: #ff6363;
+  --color-hold: #9a6a08;
+  --color-revoked: #4a5057;
+
+  /* Verdict tints */
+  --color-paid-tint: #eef5e2;
+  --color-refused-tint: #ffe9e9;
+  --color-hold-tint: #f7efd9;
+
+  --font-display: "Open Runde", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, "SF Mono", Menlo, monospace;
+
+  --radius-card: 16px;
+  --radius-panel: 32px;
+  --radius-pill: 100px;
+
+  --shadow-artifact: 0px 1.78px 8px 0px rgba(0, 0, 0, 0.05), 0px 0.89px 2.67px 0px rgba(0, 0, 0, 0.04);
+  --shadow-invoice: 0px 1px 2px 0px rgba(10, 13, 20, 0.03);
+  --shadow-button: 0px 0px 0px 1px rgb(36, 38, 40), 0px 1px 2px 0px rgba(27, 28, 29, 0.48);
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  color-scheme: light;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Semantic type scale (Open Runde, compressed tracking on display sizes). */
+@layer components {
+  .eyebrow {
+    font-size: 11px;
+    line-height: 1.62;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--color-electric);
+  }
+  .h-display {
+    font-size: clamp(38px, 6vw, 64px);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    font-weight: 600;
+    text-wrap: balance;
+  }
+  .h1 {
+    font-size: clamp(30px, 5vw, 48px);
+    line-height: 1.12;
+    letter-spacing: -0.03em;
+    font-weight: 600;
+    text-wrap: balance;
+  }
+  .h2 {
+    font-size: clamp(26px, 3.5vw, 32px);
+    line-height: 1.22;
+    letter-spacing: -0.03em;
+    font-weight: 600;
+    text-wrap: balance;
+  }
+  .h3 {
+    font-size: 20px;
+    line-height: 1.33;
+    letter-spacing: -0.03em;
+    font-weight: 600;
+  }
+  .body-lg {
+    font-size: 20px;
+    line-height: 1.45;
+    letter-spacing: -0.01em;
+    font-weight: 500;
+  }
+  .mono {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
 }
