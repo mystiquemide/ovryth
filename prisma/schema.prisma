@@ -52,7 +52,8 @@ model Room {
   slug           String     @unique
   name           String
   tokenSymbol    String
-  telegramChatId BigInt     @unique
+  telegramChatId BigInt?    @unique // set when the group links via linkCode
+  linkCode       String?    @unique // one-time code the owner uses to bind the Telegram group
   ownerAccount   String // Base Account address
   status         RoomStatus @default(pending_onchain)
   external       Boolean    @default(false)
@@ -73,8 +74,8 @@ model Permission {
   hash           String    @unique
   allowanceUsdc  BigInt // 6dp
   periodSeconds  Int
-  start          Int
-  end            Int
+  start          BigInt // unix seconds (uint48)
+  end            BigInt // unix seconds (uint48), can be 2^48-1
   approvedOnchain Boolean  @default(false)
   lastStatusJson Json?
   lastStatusAt   DateTime?

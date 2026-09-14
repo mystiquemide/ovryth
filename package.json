@@ -15,6 +15,7 @@
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
     "db:smoke": "tsx scripts/db-smoke.ts",
+    "rooms:smoke": "tsx scripts/rooms-smoke.ts",
     "base:create": "tsx scripts/create-base-account.ts",
     "spike:spend": "tsx scripts/spike-spend-permission.ts",
     "debug:spend": "tsx scripts/debug-spend.ts"
