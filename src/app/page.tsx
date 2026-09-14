@@ -1,5 +1,9 @@
 import { Nav } from "@/components/site/Nav";
 import { Hero } from "@/components/site/Hero";
+import { JudgePath } from "@/components/site/JudgePath";
+import { Custody } from "@/components/site/Custody";
+import { Comparison } from "@/components/site/Comparison";
+import { Footer } from "@/components/site/Footer";
 
 export default function Home() {
   return (
@@ -7,7 +11,11 @@ export default function Home() {
       <Nav />
       <main>
         <Hero />
+        <JudgePath />
+        <Custody />
+        <Comparison />
       </main>
+      <Footer />
     </>
   );
 }

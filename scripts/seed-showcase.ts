@@ -59,6 +59,17 @@ async function main() {
     create: { roomId: room.id, version: 1, categories: CATEGORIES, memberWeeklyCapUsdc: 25_000_000n, roomDailyCapUsdc: 30_000_000n, minAccountAgeDays: 30, minTenureDays: 3, freeText: "We pay for real help: correct answers, accurate translations, usable guides. No hype, no filler, no copies." },
   });
 
+  // Real pinned questions for the judge path.
+  await prisma.question.deleteMany({ where: { roomId: room.id } });
+  const QUESTIONS = [
+    "How do I bridge USDC from Ethereum to Base, and what does it cost?",
+    "What does the OvrythPayer contract prevent, and how would you check it on BaseScan?",
+    "What is the difference between a Base Account and a normal wallet for spend permissions?",
+  ];
+  for (let i = 0; i < QUESTIONS.length; i++) {
+    await prisma.question.create({ data: { roomId: room.id, telegramMessageId: BigInt(1000 + i), text: QUESTIONS[i], active: true, pinnedAt: new Date(Date.now() - (QUESTIONS.length - i) * 60000) } });
+  }
+
   const alice = await mkMember(room.id, 900001n, "ava");
   const bob = await mkMember(room.id, 900002n, "lena");
   const farmer = await mkMember(room.id, 900003n, "ava_alt");

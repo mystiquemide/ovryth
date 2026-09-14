@@ -18,11 +18,17 @@ export interface ShowcaseData {
   reverted: boolean;
   resetLabel: string;
   rows: VerdictRowData[];
+  questions: string[];
+  examplePaidTxHash: string | null;
+  examplePaidAmount: number | null;
 }
 
 /** Read the seeded showcase room from the DB (no chain call). Returns null if not seeded. */
 export async function getShowcase(slug = "ovryth"): Promise<ShowcaseData | null> {
-  const room = await prisma.room.findUnique({ where: { slug }, include: { permission: true } });
+  const room = await prisma.room.findUnique({
+    where: { slug },
+    include: { permission: true, questions: { where: { active: true }, orderBy: { pinnedAt: "asc" } } },
+  });
   if (!room || !room.permission) return null;
 
   const [payouts, refusals] = await Promise.all([
@@ -83,6 +89,7 @@ export async function getShowcase(slug = "ovryth"): Promise<ShowcaseData | null>
     .sort((a, b) => (b.time > a.time ? 1 : -1))
     .slice(0, 3);
 
+  const firstPaid = confirmed[0];
   return {
     slug: room.slug,
     name: room.name,
@@ -93,5 +100,8 @@ export async function getShowcase(slug = "ovryth"): Promise<ShowcaseData | null>
     reverted: payouts.some((p) => p.status === "reverted"),
     resetLabel: "resets Mon 00:00 UTC",
     rows,
+    questions: room.questions.map((q) => q.text),
+    examplePaidTxHash: firstPaid?.txHash ?? null,
+    examplePaidAmount: firstPaid ? fromMicroUsdc(firstPaid.amountUsdc) : null,
   };
 }
