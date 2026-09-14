@@ -222,6 +222,16 @@ model Hold {
   releasedAt DateTime?
 }
 
+/// A wallet linked by a user in a DM, keyed by Telegram user id (no room context there).
+/// Synced into per-room Member.Wallet rows when the user contributes.
+model LinkedWallet {
+  id             String     @id @default(cuid())
+  telegramUserId BigInt     @unique
+  address        String
+  linkMethod     LinkMethod @default(dm)
+  linkedAt       DateTime   @default(now())
+}
+
 model Job {
   id        String    @id @default(cuid())
   type      JobType

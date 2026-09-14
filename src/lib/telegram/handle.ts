@@ -4,6 +4,8 @@ import { REASON, type ReasonCode } from "@/lib/engine/types";
 import { runEngineForMessage } from "@/lib/engine/run";
 import { enqueuePayout, processPayout } from "@/lib/payout";
 import { sendMessage, baseScanTx } from "./api";
+import { handleDm } from "./dm";
+import { ensureMemberWallet } from "./wallet";
 
 // --- Minimal Telegram update shapes we consume -----------------------------------
 interface TgChat { id: number; type: string }
@@ -33,7 +35,7 @@ export async function handleUpdate(update: TgUpdate): Promise<void> {
   const msg = update.message;
   if (!msg) return;
   if (msg.migrate_to_chat_id) return handleMigrate(msg);
-  if (msg.chat.type === "private") return; // DM commands (/wallet) land in Task 16
+  if (msg.chat.type === "private") return handleDm(msg);
   if (!msg.text || !msg.from || msg.from.is_bot) return;
 
   const text = msg.text.trim();
@@ -96,6 +98,8 @@ async function handleContribution(msg: TgMessage, text: string): Promise<void> {
       approxAccountAgeDays: approxAccountAgeDaysFromUserId(BigInt(from.id)),
     },
   });
+  // Sync a DM-linked wallet into this membership so an approved contribution pays out.
+  await ensureMemberWallet(member.id, BigInt(from.id));
 
   // Idempotent on (roomId, telegramMessageId).
   const existing = await prisma.message.findUnique({ where: { roomId_telegramMessageId: { roomId: room.id, telegramMessageId: BigInt(msg.message_id) } } });
@@ -137,7 +141,21 @@ async function handleContribution(msg: TgMessage, text: string): Promise<void> {
   await prisma.refusal.create({ data: { decisionId, public: canReply } });
   if (canReply) {
     await prisma.member.update({ where: { id: member.id }, data: { publicRefusalsToday: { increment: 1 } } });
-    await sendMessage(msg.chat.id, `Not paid: ${REASON[d.reasonCode as ReasonCode]}.`, { replyToMessageId: msg.message_id });
+    await sendMessage(msg.chat.id, refusalReply(d.reasonCode as ReasonCode), { replyToMessageId: msg.message_id });
+  }
+}
+
+/** Public refusal copy. Cap cases get their own line; everything else uses the fixed reason. */
+function refusalReply(code: ReasonCode): string {
+  switch (code) {
+    case "ROOM_ALLOWANCE":
+      return "Weekly budget reached for this room.";
+    case "ROOM_DAILY_CAP":
+      return "Daily budget reached for this room. Try again tomorrow.";
+    case "MEMBER_CAP":
+      return "You've reached your weekly cap in this room.";
+    default:
+      return `Not paid: ${REASON[code]}.`;
   }
 }
 

@@ -16,6 +16,7 @@
     "db:deploy": "prisma migrate deploy",
     "db:smoke": "tsx scripts/db-smoke.ts",
     "rooms:smoke": "tsx scripts/rooms-smoke.ts",
+    "tg:setup": "tsx scripts/tg-setup.ts",
     "payout:proof": "tsx --env-file=.env.local scripts/payout-proof.ts",
     "base:create": "tsx scripts/create-base-account.ts",
     "spike:spend": "tsx scripts/spike-spend-permission.ts",
