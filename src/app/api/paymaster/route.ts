@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { appendFileSync } from "node:fs";
 
 export const dynamic = "force-dynamic";
 
@@ -29,6 +30,11 @@ export async function POST(req: Request) {
   }
 
   const method = (body as { method?: string }).method;
+  try {
+    appendFileSync("/tmp/paymaster-hits.log", `${new Date().toISOString()} ${method}\n`);
+  } catch {
+    /* best-effort debug log */
+  }
   if (typeof method !== "string" || !ALLOWED.has(method)) {
     return NextResponse.json({ error: "method not allowed" }, { status: 403 });
   }
