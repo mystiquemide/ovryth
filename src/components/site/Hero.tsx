@@ -5,13 +5,15 @@ import { VerdictRow } from "@/components/VerdictRow";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { getShowcase } from "@/lib/showcase";
 import { SHOWCASE_SLUG } from "./Nav";
+import { EdgeDecor } from "./EdgeDecor";
 
 export async function Hero() {
   const showcase = await getShowcase(SHOWCASE_SLUG);
 
   return (
-    <section className="px-6 pt-20 pb-16 md:pt-28">
-      <div className="mx-auto max-w-[880px] text-center">
+    <section className="relative px-6 pt-20 pb-16 md:pt-28">
+      <EdgeDecor />
+      <div className="relative z-10 mx-auto max-w-[880px] text-center">
         <p className="eyebrow">Payroll for real community work</p>
         <h1 className="h-display mt-4">Pay members for real work. Never past your cap.</h1>
         <p className="body-lg mx-auto mt-5 max-w-[620px] text-smoke">
@@ -25,7 +27,7 @@ export async function Hero() {
       </div>
 
       {showcase && (
-        <div className="mx-auto mt-14 max-w-[880px]">
+        <div className="relative z-10 mx-auto mt-14 max-w-[880px]">
           <div className="rounded-panel border border-mist bg-paper p-6 shadow-[var(--shadow-artifact)] md:p-8">
             <div className="mb-5 flex items-center justify-between gap-3">
               <div className="flex items-center gap-2.5">
