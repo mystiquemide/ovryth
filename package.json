@@ -7,12 +7,16 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "env:check": "tsx scripts/env-check.ts"
+    "env:check": "tsx scripts/env-check.ts",
+    "fixture:scorer": "tsx scripts/fixture-scorer.ts"
   },
   "dependencies": {
+    "@google/genai": "^2.19.0",
+    "groq-sdk": "^1.6.0",
     "next": "16.3.4",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
