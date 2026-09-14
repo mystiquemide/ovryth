@@ -49,28 +49,41 @@ export function Footer() {
               <p className="mono mt-3 text-[12px] text-fog">Base mainnet · chain id 8453</p>
             </div>
 
-            <div className="flex gap-16">
+            <div className="flex flex-wrap gap-12 md:gap-16">
               <div className="flex flex-col gap-3">
                 <div className="eyebrow text-fog">Product</div>
                 <FootLink href="/room">Room</FootLink>
                 <FootLink href="/onboard">Onboard</FootLink>
-                <FootLink href="/proof">Proof</FootLink>
                 <FootLink href="/open">Open a room</FootLink>
+                <FootLink href="/console">Console</FootLink>
               </div>
               <div className="flex flex-col gap-3">
-                <div className="eyebrow text-fog">Code</div>
+                <div className="eyebrow text-fog">Resources</div>
+                <FootLink href="/docs">Docs</FootLink>
+                <FootLink href="/proof">Proof</FootLink>
+                <FootLink href="/status">Status</FootLink>
+              </div>
+              <div className="flex flex-col gap-3">
+                <div className="eyebrow text-fog">More</div>
                 <FootLink href={GITHUB_URL} external>GitHub</FootLink>
                 <FootLink href={X_URL} external>X</FootLink>
+                <FootLink href="/privacy">Privacy</FootLink>
+                <FootLink href="/terms">Terms</FootLink>
               </div>
             </div>
           </div>
 
-          <div className="mt-12 border-t border-mist pt-6">
+          <div className="mt-12 flex flex-col gap-4 border-t border-mist pt-6 md:flex-row md:items-end md:justify-between">
             <ul className="space-y-1.5">
               {HONESTY.map((h) => (
                 <li key={h} className="text-[12px] leading-relaxed text-fog">{h}</li>
               ))}
             </ul>
+            <div className="flex items-center gap-4 text-[12px] text-fog">
+              <FootLink href="/privacy">Privacy</FootLink>
+              <FootLink href="/terms">Terms</FootLink>
+              <FootLink href="/status">Status</FootLink>
+            </div>
           </div>
         </div>
       </footer>
