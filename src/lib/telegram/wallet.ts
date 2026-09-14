@@ -17,6 +17,9 @@ export async function linkWallet(telegramUserId: bigint, raw: string, confirm: b
     return { ok: false, message: "That does not look like a valid address. Send: /wallet 0xYourBaseAddress" };
   }
   const address = getAddress(raw);
+  if (address === "0x0000000000000000000000000000000000000000") {
+    return { ok: false, message: "That is the zero address. Send your real Base payout address: /wallet 0xYourBaseAddress" };
+  }
   const existing = await prisma.linkedWallet.findUnique({ where: { telegramUserId } });
 
   if (existing && getAddress(existing.address) === address) {

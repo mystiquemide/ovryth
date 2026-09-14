@@ -3,7 +3,7 @@ import { contentHash, simhash, approxAccountAgeDaysFromUserId } from "@/lib/engi
 import { REASON, type ReasonCode } from "@/lib/engine/types";
 import { runEngineForMessage } from "@/lib/engine/run";
 import { enqueuePayout, processPayout } from "@/lib/payout";
-import { sendMessage, baseScanTx } from "./api";
+import { sendMessage, baseScanTx, botUserId, isChatAdmin } from "./api";
 import { handleDm } from "./dm";
 import { ensureMemberWallet } from "./wallet";
 
@@ -87,6 +87,16 @@ async function handleLink(msg: TgMessage, text: string): Promise<void> {
     await sendMessage(msg.chat.id, "Send /link followed by your room code from the Ovryth onboarding page.", { replyToMessageId: msg.message_id });
     return;
   }
+  // Only a group admin may bind a room, and only once the bot is itself an admin so it can
+  // actually read and reply in the group. The one-time code alone is not enough.
+  if (!(await isChatAdmin(msg.chat.id, msg.from!.id))) {
+    await sendMessage(msg.chat.id, "Only a group admin can link this group to a room.", { replyToMessageId: msg.message_id });
+    return;
+  }
+  if (!(await isChatAdmin(msg.chat.id, await botUserId()))) {
+    await sendMessage(msg.chat.id, "Add me as a group admin first so I can watch and reply here, then resend /link.", { replyToMessageId: msg.message_id });
+    return;
+  }
   const room = await prisma.room.findUnique({ where: { linkCode: code } });
   if (!room) {
     await sendMessage(msg.chat.id, "That room code was not found or has already been used.", { replyToMessageId: msg.message_id });
@@ -104,10 +114,12 @@ async function handleLink(msg: TgMessage, text: string): Promise<void> {
   await sendMessage(msg.chat.id, `Linked to room "${room.name}". Ovryth is now watching for real work here.`, { replyToMessageId: msg.message_id });
 }
 
-/** Store a pinned/tagged open question as classifier context. */
+/** Store a pinned/tagged open question as classifier context. Admins only. */
 async function handleQuestion(msg: TgMessage, text: string): Promise<void> {
   const room = await roomForChat(msg.chat.id);
   if (!room) return;
+  // Classifier context is trusted input — only a group admin may set it.
+  if (!(await isChatAdmin(msg.chat.id, msg.from!.id))) return;
   const body = text.replace(/^#question/i, "").trim();
   if (!body) return;
   await prisma.question.upsert({

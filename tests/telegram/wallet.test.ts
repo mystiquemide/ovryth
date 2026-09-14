@@ -23,6 +23,13 @@ describe("linkWallet", () => {
     expect(r.ok).toBe(false);
   });
 
+  it("rejects the zero address", async () => {
+    const r = await linkWallet(USER, "0x0000000000000000000000000000000000000000", false);
+    expect(r.ok).toBe(false);
+    const lw = await prisma.linkedWallet.findUnique({ where: { telegramUserId: USER } });
+    expect(lw).toBeNull();
+  });
+
   it("links a valid address", async () => {
     const r = await linkWallet(USER, A.toLowerCase(), false);
     expect(r.ok).toBe(true);
