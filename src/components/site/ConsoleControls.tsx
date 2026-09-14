@@ -61,6 +61,18 @@ export function ConsoleControls({
     }
   }
 
+  async function disconnect() {
+    try {
+      await providerRef.current?.request({ method: "wallet_revokePermissions", params: [{ eth_accounts: {} }] });
+    } catch {
+      /* best-effort revoke; local state clears regardless */
+    }
+    providerRef.current = null;
+    setAccount(null);
+    setError(null);
+    setNotice(null);
+  }
+
   async function sign(action: string): Promise<{ ownerSignature: string; issuedAt: string }> {
     const provider = await getProvider();
     const issuedAt = new Date().toISOString();
@@ -127,7 +139,16 @@ export function ConsoleControls({
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3 rounded-card border border-mist bg-snow px-4 py-3">
         <span className="text-[13px] text-smoke">Connected</span>
-        <AddressDisplay value={account} />
+        <div className="flex items-center gap-3">
+          <AddressDisplay value={account} />
+          <button
+            type="button"
+            onClick={disconnect}
+            className="inline-flex min-h-[36px] items-center rounded-pill border border-mist px-3 text-[13px] text-smoke transition-colors hover:border-ink/40 hover:text-ink"
+          >
+            Disconnect
+          </button>
+        </div>
       </div>
 
       {!isOwner && (

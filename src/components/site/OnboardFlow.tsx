@@ -75,6 +75,22 @@ export function OnboardFlow() {
     }
   }
 
+  async function disconnect() {
+    try {
+      await providerRef.current?.request({ method: "wallet_revokePermissions", params: [{ eth_accounts: {} }] });
+    } catch {
+      /* best-effort revoke; local state clears regardless */
+    }
+    providerRef.current = null;
+    setAccount(null);
+    setPermission(null);
+    setSlug(null);
+    setLinkCode(null);
+    setWrongNetwork(false);
+    setError(null);
+    setStep("connect");
+  }
+
   async function signPermission() {
     if (!account) return;
     setError(null);
@@ -199,7 +215,16 @@ export function OnboardFlow() {
       {step !== "connect" && account && (
         <div className="mb-6 flex items-center justify-between rounded-card border border-mist bg-snow px-4 py-3">
           <span className="text-[13px] text-smoke">Connected</span>
-          <AddressDisplay value={account} />
+          <div className="flex items-center gap-3">
+            <AddressDisplay value={account} />
+            <button
+              type="button"
+              onClick={disconnect}
+              className="inline-flex min-h-[36px] items-center rounded-pill border border-mist px-3 text-[13px] text-smoke transition-colors hover:border-ink/40 hover:text-ink"
+            >
+              Disconnect
+            </button>
+          </div>
         </div>
       )}
 
