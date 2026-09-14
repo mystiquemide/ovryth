@@ -1,0 +1,235 @@
+// Ovryth data model (ARCHITECTURE.md section 6).
+// On-chain: cap, period, revocation, every payout. Off-chain (here): rooms, rules,
+// scoring, refusals, holds. Nothing off chain can move money.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  // Connection URLs live in prisma.config.ts (migrations use DIRECT_URL); the runtime
+  // client connects through the pg driver adapter with DATABASE_URL (pooler). See src/lib/db.ts.
+}
+
+enum RoomStatus {
+  pending_onchain
+  active
+  paused
+  revoked
+  expired
+  inactive_bot
+}
+
+enum PayoutStatus {
+  queued
+  sent
+  confirmed
+  reverted
+  failed
+}
+
+enum LinkMethod {
+  dm
+  deeplink
+}
+
+enum JobType {
+  payout
+  status
+  hold_expiry
+}
+
+enum JobStatus {
+  queued
+  running
+  done
+  failed
+}
+
+model Room {
+  id             String     @id @default(cuid())
+  slug           String     @unique
+  name           String
+  tokenSymbol    String
+  telegramChatId BigInt     @unique
+  ownerAccount   String // Base Account address
+  status         RoomStatus @default(pending_onchain)
+  external       Boolean    @default(false)
+  createdAt      DateTime   @default(now())
+
+  permission     Permission?
+  rulesVersions  RulesVersion[]
+  questions      Question[]
+  members        Member[]
+  messages       Message[]
+}
+
+model Permission {
+  id             String    @id @default(cuid())
+  roomId         String    @unique
+  room           Room      @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  permissionJson Json // SpendPermission as returned by the SDK (with signature)
+  hash           String    @unique
+  allowanceUsdc  BigInt // 6dp
+  periodSeconds  Int
+  start          Int
+  end            Int
+  approvedOnchain Boolean  @default(false)
+  lastStatusJson Json?
+  lastStatusAt   DateTime?
+}
+
+model RulesVersion {
+  id                 String   @id @default(cuid())
+  roomId             String
+  room               Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  version            Int
+  categories         Json // [{key,label,minUsdc,maxUsdc}]
+  memberWeeklyCapUsdc BigInt
+  roomDailyCapUsdc   BigInt
+  minAccountAgeDays  Int
+  minTenureDays      Int
+  freeText           String   @default("")
+  effectiveAt        DateTime @default(now())
+
+  candidates Candidate[]
+
+  @@unique([roomId, version])
+}
+
+model Question {
+  id                String   @id @default(cuid())
+  roomId            String
+  room              Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  telegramMessageId BigInt
+  text              String
+  pinnedAt          DateTime @default(now())
+  active            Boolean  @default(true)
+
+  @@unique([roomId, telegramMessageId])
+}
+
+model Member {
+  id                  String   @id @default(cuid())
+  roomId              String
+  room                Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  telegramUserId      BigInt
+  username            String?
+  firstSeenAt         DateTime @default(now())
+  approxAccountAgeDays Int     @default(0)
+  publicRefusalsToday Int      @default(0)
+  paidThisWeekUsdc    BigInt   @default(0)
+  seeded              Boolean  @default(false)
+
+  wallet   Wallet?
+  messages Message[]
+  holds    Hold[]
+
+  @@unique([roomId, telegramUserId])
+}
+
+model Wallet {
+  id         String     @id @default(cuid())
+  memberId   String     @unique
+  member     Member     @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  address    String
+  linkedAt   DateTime   @default(now())
+  linkMethod LinkMethod
+}
+
+model Message {
+  id                  String    @id @default(cuid())
+  roomId              String
+  room                Room      @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  memberId            String
+  member              Member    @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  telegramMessageId   BigInt
+  text                String
+  contentHash         String
+  simhash             String
+  editedAfterDecision Boolean   @default(false)
+  createdAt           DateTime  @default(now())
+  prefilterResult     Json?
+
+  candidates Candidate[]
+
+  @@unique([roomId, telegramMessageId])
+  @@index([roomId, createdAt])
+}
+
+model Candidate {
+  id             String       @id @default(cuid())
+  messageId      String
+  message        Message      @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  rulesVersionId String
+  rulesVersion   RulesVersion @relation(fields: [rulesVersionId], references: [id])
+  modelOutput    Json
+  provider       String
+  latencyMs      Int
+  createdAt      DateTime     @default(now())
+
+  decision Decision?
+}
+
+model Decision {
+  id             String   @id @default(cuid())
+  candidateId    String   @unique
+  candidate      Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  finalAmountUsdc BigInt
+  reasonCode     String
+  reasonText     String
+  policyNotes    Json?
+  decidedAt      DateTime @default(now())
+
+  payout  Payout?
+  refusal Refusal?
+  hold    Hold?
+}
+
+model Payout {
+  id          String       @id @default(cuid())
+  decisionId  String       @unique
+  decision    Decision     @relation(fields: [decisionId], references: [id], onDelete: Cascade)
+  walletAddress String
+  amountUsdc  BigInt
+  status      PayoutStatus @default(queued)
+  txHash      String?
+  blockNumber BigInt?
+  attempts    Int          @default(0)
+  lastError   String?
+  createdAt   DateTime     @default(now())
+  confirmedAt DateTime?
+}
+
+model Refusal {
+  id              String   @id @default(cuid())
+  decisionId      String   @unique
+  decision        Decision @relation(fields: [decisionId], references: [id], onDelete: Cascade)
+  public          Boolean  @default(false)
+  repliedMessageId BigInt?
+}
+
+model Hold {
+  id         String    @id @default(cuid())
+  decisionId String    @unique
+  decision   Decision  @relation(fields: [decisionId], references: [id], onDelete: Cascade)
+  memberId   String
+  member     Member    @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  amountUsdc BigInt
+  expiresAt  DateTime
+  releasedAt DateTime?
+}
+
+model Job {
+  id        String    @id @default(cuid())
+  type      JobType
+  refId     String
+  status    JobStatus @default(queued)
+  attempts  Int       @default(0)
+  runAfter  DateTime  @default(now())
+  lastError String?
+  createdAt DateTime  @default(now())
+
+  @@index([status, runAfter])
+}
