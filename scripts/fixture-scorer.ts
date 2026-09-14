@@ -9,14 +9,16 @@ config({ path: ".env.local" });
 
 import { readFileSync } from "node:fs";
 import { classify } from "../src/lib/engine/classify";
-import { decide } from "../src/lib/engine/policy";
-import type { MemberFacts, RoomFacts, Rules } from "../src/lib/engine/types";
+import { scoreContribution } from "../src/lib/engine/engine";
+import type { EngineMember, EngineRoom } from "../src/lib/engine/engine";
+import type { Rules } from "../src/lib/engine/types";
 
 interface Item {
   id: string;
   text: string;
   expectPay: boolean;
   expectCategory?: string;
+  injection?: boolean;
 }
 interface Fixture {
   rules: Rules;
@@ -27,8 +29,8 @@ interface Fixture {
 const fixture = JSON.parse(readFileSync("tests/fixtures/contributions.json", "utf8")) as Fixture;
 
 // Generous member/room facts so this test isolates the classifier + amount policy, not the sybil floors.
-const member: MemberFacts = { approxAccountAgeDays: 365, tenureDays: 90, paidThisWeekUsdc: 0, hasLinkedWallet: true };
-const room: RoomFacts = { remainingAllowanceUsdc: 1000, paidTodayUsdc: 0 };
+const member: EngineMember = { approxAccountAgeDays: 365, tenureDays: 90, paidThisWeekUsdc: 0, publicRefusalsToday: 0, hasLinkedWallet: true };
+const room: EngineRoom = { remainingAllowanceUsdc: 1000, paidTodayUsdc: 0 };
 
 type RunSpec = { label: string; provider: "gemini" | "groq" };
 // Groq is the classifier primary (unlimited here, 10/10 clean). Gemini is one paced cross-check.
@@ -66,13 +68,13 @@ async function main() {
 
   for (const run of RUNS) {
     for (const item of fixture.items) {
-      let paid = false;
       let amount = 0;
       let detail = "";
       try {
-        const { data: verdict } = await classifyWithRetry(item.text, fixture.rules, fixture.questions, run.provider);
-        const d = decide(verdict, fixture.rules, member, room);
-        paid = d.pay;
+        const { decision: d } = await scoreContribution(
+          { text: item.text, rules: fixture.rules, questions: fixture.questions, member, room, priorSimhashes: [], priorContentHashes: [] },
+          { classify: (t, r, q) => classifyWithRetry(t, r, q, run.provider) },
+        );
         amount = d.amountUsdc;
         detail = d.pay ? `PAID ${amount} (${d.categoryKey})` : `refused: ${d.reasonCode}`;
 
