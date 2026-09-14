@@ -9,17 +9,17 @@ export function EdgeDecor() {
       <Img
         src="/hero/coins.jpg"
         alt=""
-        className="left-0 top-[52%] w-[310px] -translate-x-[42%] -rotate-[8deg]"
+        className="left-0 top-[44%] w-[520px] -translate-x-[30%] -rotate-[7deg]"
       />
       <Img
         src="/hero/cash.jpg"
         alt=""
-        className="right-0 top-[54%] w-[300px] translate-x-[42%] rotate-[9deg]"
+        className="right-0 top-[50%] w-[500px] translate-x-[30%] rotate-[8deg]"
       />
       <Img
         src="/hero/rain.jpg"
         alt=""
-        className="right-[2%] top-[15%] w-[200px] rotate-[-9deg]"
+        className="right-[1%] top-[10%] w-[330px] rotate-[-8deg]"
       />
     </div>
   );
