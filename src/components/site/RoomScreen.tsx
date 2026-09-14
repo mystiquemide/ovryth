@@ -1,5 +1,4 @@
 import { Nav } from "@/components/site/Nav";
-import { Footer } from "@/components/site/Footer";
 import { BudgetBar } from "@/components/BudgetBar";
 import { PermissionCard } from "@/components/PermissionCard";
 import { RulesPanel } from "@/components/RulesPanel";
@@ -154,7 +153,6 @@ export function RoomScreen({ room }: { room: RoomView }) {
           </div>
         </section>
       </main>
-      <Footer />
     </>
   );
 }
