@@ -62,7 +62,7 @@ export function PermissionCard(p: PermissionCardProps) {
       <Field label="End date">{p.endDate}</Field>
 
       <div className="mt-4 flex items-center justify-between">
-        <a href={baseScanAddress(p.managerAddress)} target="_blank" rel="noreferrer" className="text-[13px] text-electric hover:underline">
+        <a href={baseScanAddress(p.managerAddress)} target="_blank" rel="noreferrer" className="text-[13px] text-link hover:underline">
           Verify the manager on BaseScan ↗
         </a>
       </div>

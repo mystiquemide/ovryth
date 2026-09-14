@@ -33,7 +33,7 @@ function Tab({ active, onClick, label, count }: { active: boolean; onClick: () =
     <button
       type="button"
       onClick={onClick}
-      className={`rounded-pill px-3.5 py-1.5 text-[14px] font-medium transition-colors duration-150 ${
+      className={`inline-flex min-h-[44px] items-center rounded-pill px-4 text-[14px] font-medium transition-colors duration-150 ${
         active ? "bg-ink text-white" : "text-smoke hover:bg-snow hover:text-ink"
       }`}
     >

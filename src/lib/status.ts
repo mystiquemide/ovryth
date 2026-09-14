@@ -1,6 +1,10 @@
 import { prisma } from "./db";
 import { publicClient } from "./chain/clients";
 import { PAYER_ADDRESS } from "./chain/config";
+import { getOperatorNotes } from "./console";
+
+const LOW_GAS_ETH = 0.0002;
+const STALE_TICK_MS = 15 * 60 * 1000;
 
 export type State = "operational" | "degraded" | "down";
 
@@ -53,6 +57,18 @@ export async function getSystemStatus(): Promise<SystemStatus> {
       const json = (await res.json()) as { ok: boolean; result?: { username?: string } };
       if (!json.ok) return { state: "down" as State, detail: "getMe failed" };
       return { detail: `@${json.result?.username ?? "bot"} online` };
+    }),
+    run("Sweeper", async () => {
+      const n = await getOperatorNotes();
+      const gas = n.operatorGasEth !== null ? Number(n.operatorGasEth) : null;
+      const tickAge = n.lastTick ? Date.now() - new Date(n.lastTick).getTime() : null;
+      const parts = [
+        n.lastTick ? `last tick ${new Date(n.lastTick).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "UTC" })} UTC` : "no tick yet",
+        `${n.pendingJobs} pending`,
+        gas !== null ? `gas ${gas.toFixed(5)} ETH` : "gas unknown",
+      ];
+      const degraded = (gas !== null && gas < LOW_GAS_ETH) || (tickAge !== null && tickAge > STALE_TICK_MS) || n.lastTick === null;
+      return { state: degraded ? ("degraded" as State) : ("operational" as State), detail: parts.join(" · ") };
     }),
   ]);
 

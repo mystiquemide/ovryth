@@ -17,6 +17,8 @@
   /* Accent (functional punctuation only) */
   --color-electric: #0098f2;
   --color-ice: #cfeafa;
+  /* Accessible blue for small text links and eyebrows (>=4.5:1 on paper). */
+  --color-link: #0470b8;
 
   /* Verdict colors - only ever shown with a word + glyph */
   --color-paid: #5d9c06;
@@ -62,7 +64,7 @@ body {
     letter-spacing: 0.02em;
     text-transform: uppercase;
     font-weight: 600;
-    color: var(--color-electric);
+    color: var(--color-link);
   }
   .h-display {
     font-size: clamp(38px, 6vw, 64px);

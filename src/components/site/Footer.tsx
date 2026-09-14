@@ -2,17 +2,24 @@ import Link from "next/link";
 import { ButtonLink } from "@/components/ui/Button";
 import { Wordmark } from "@/components/ui/Logo";
 
-const GITHUB_URL = "https://github.com/mystiquemide/ovryth";
 const X_URL = "https://x.com/ovryth";
 
 const HONESTY = [
-  "Seeded accounts are labeled as seeded.",
+  "Demo accounts are labeled as demo.",
   "Telegram does not expose account age, so it is approximated from the user id and first-seen date.",
   "Spend permissions need a Base Account (smart wallet); plain EOAs are unsupported.",
 ];
 
+function XMark() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24h-6.66l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.45-6.231zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z" />
+    </svg>
+  );
+}
+
 function FootLink({ href, children, external }: { href: string; children: React.ReactNode; external?: boolean }) {
-  const cls = "text-[14px] text-smoke transition-colors duration-150 hover:text-ink";
+  const cls = "inline-flex min-h-[36px] items-center text-[14px] text-smoke transition-colors duration-150 hover:text-ink";
   return external ? (
     <a href={href} target="_blank" rel="noreferrer" className={cls}>{children}</a>
   ) : (
@@ -57,16 +64,14 @@ export function Footer() {
                 <FootLink href="/open">Open a room</FootLink>
                 <FootLink href="/console">Console</FootLink>
               </div>
-              <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-1">
                 <div className="eyebrow text-fog">Resources</div>
                 <FootLink href="/docs">Docs</FootLink>
                 <FootLink href="/proof">Proof</FootLink>
                 <FootLink href="/status">Status</FootLink>
               </div>
-              <div className="flex flex-col gap-3">
-                <div className="eyebrow text-fog">More</div>
-                <FootLink href={GITHUB_URL} external>GitHub</FootLink>
-                <FootLink href={X_URL} external>X</FootLink>
+              <div className="flex flex-col gap-1">
+                <div className="eyebrow text-fog">Legal</div>
                 <FootLink href="/privacy">Privacy</FootLink>
                 <FootLink href="/terms">Terms</FootLink>
               </div>
@@ -79,11 +84,15 @@ export function Footer() {
                 <li key={h} className="text-[12px] leading-relaxed text-fog">{h}</li>
               ))}
             </ul>
-            <div className="flex items-center gap-4 text-[12px] text-fog">
-              <FootLink href="/privacy">Privacy</FootLink>
-              <FootLink href="/terms">Terms</FootLink>
-              <FootLink href="/status">Status</FootLink>
-            </div>
+            <a
+              href={X_URL}
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Ovryth on X"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-pill text-smoke transition-colors hover:bg-snow hover:text-ink"
+            >
+              <XMark />
+            </a>
           </div>
         </div>
       </footer>

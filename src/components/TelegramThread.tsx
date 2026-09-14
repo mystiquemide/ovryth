@@ -53,7 +53,7 @@ export function TelegramThread({ paidTxHash, paidAmount }: { paidTxHash: string 
               Paid <span className="mono">{formatUsdcAmount(amount)} USDC</span> for support.
             </span>
             {paidTxHash && (
-              <a href={baseScanTx(paidTxHash)} target="_blank" rel="noreferrer" className="mono text-[13px] text-electric hover:underline">
+              <a href={baseScanTx(paidTxHash)} target="_blank" rel="noreferrer" className="mono text-[13px] text-link hover:underline">
                 tx {shortHash(paidTxHash)} ↗
               </a>
             )}

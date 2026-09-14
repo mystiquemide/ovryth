@@ -4,6 +4,7 @@ import { BudgetBar } from "@/components/BudgetBar";
 import { PermissionCard } from "@/components/PermissionCard";
 import { RulesPanel } from "@/components/RulesPanel";
 import { RoomLedgerTabs } from "@/components/RoomLedgerTabs";
+import { LedgerLegend } from "@/components/LedgerLegend";
 import { TelegramThread } from "@/components/TelegramThread";
 import { VerdictPill, Pill, type VerdictKind } from "@/components/ui/Pill";
 import { formatUsdcAmount, baseScanTx, baseScanAddress, shortHash } from "@/lib/format";
@@ -25,7 +26,7 @@ const STEPS = [
   ["2", "DM the bot your wallet", "Send /wallet 0x… once. That address is where your USDC lands."],
   ["3", "Answer a pinned question", "Post a real, substantive answer to one of the questions below."],
   ["4", "Get paid within minutes", "Ovryth replies with the amount, the reason, and a BaseScan link."],
-  ["5", "Try to farm it", "Copy the answer from a second account. It gets refused in public."],
+  ["5", "Try to game it", "Copy the answer from a second account. It gets refused in public."],
 ];
 
 export function RoomScreen({ room }: { room: RoomView }) {
@@ -34,20 +35,36 @@ export function RoomScreen({ room }: { room: RoomView }) {
   return (
     <>
       <Nav />
-      <main className="mx-auto max-w-[1064px] px-6 py-12">
+      <main id="main-content" className="mx-auto max-w-[1064px] px-6 py-12">
         <header className="border-b border-mist pb-8">
           <div className="flex flex-wrap items-center gap-3">
             <h1 className="h2">{room.name}</h1>
-            <Pill>${room.tokenSymbol}</Pill>
+            <Pill>USDC payroll</Pill>
             <VerdictPill kind={status.kind}>{status.word}</VerdictPill>
-            {room.seeded && <Pill>seeded room</Pill>}
+            {room.seeded && <Pill>demo room</Pill>}
             {room.external && <Pill>external room</Pill>}
           </div>
+          {room.seeded && (
+            <p className="mt-2 text-[13px] text-fog">Demo room. The transactions below are real Base receipts; demo participants are labeled.</p>
+          )}
           {room.permission && (
-            <a href={baseScanAddress(room.permission.manager)} target="_blank" rel="noreferrer" className="mt-3 inline-block text-[13px] text-electric hover:underline">
+            <a href={baseScanAddress(room.permission.manager)} target="_blank" rel="noreferrer" className="mt-3 inline-block text-[13px] text-link hover:underline">
               Verify the spend permission on BaseScan ↗
             </a>
           )}
+
+          {/* Compact financial state up top, before the how-to steps. */}
+          <dl className="mt-6 flex flex-wrap gap-x-8 gap-y-3">
+            <Stat label="Weekly cap" value={`${formatUsdcAmount(room.budget.capUsdc)} USDC`} />
+            {room.permission && <Stat label="Remaining" value={`${formatUsdcAmount(room.permission.remainingUsdc)} USDC`} />}
+            <Stat label="Status" value={status.word} />
+            {room.proof.latestPayoutTx && (
+              <StatLink label="Latest payout" value={shortHash(room.proof.latestPayoutTx)} href={baseScanTx(room.proof.latestPayoutTx)} />
+            )}
+            {room.proof.latestRevertTx && (
+              <StatLink label="Latest revert" value={shortHash(room.proof.latestRevertTx)} href={baseScanTx(room.proof.latestRevertTx)} />
+            )}
+          </dl>
         </header>
 
         <section className="border-b border-mist py-10">
@@ -74,7 +91,7 @@ export function RoomScreen({ room }: { room: RoomView }) {
                   <div className="eyebrow mb-3 text-fog">Pinned questions</div>
                   <ul className="space-y-3">
                     {room.questions.map((q, i) => (
-                      <li key={i} className="flex gap-2.5 text-[14px] text-ink"><span className="mono text-electric">#</span><span>{q}</span></li>
+                      <li key={i} className="flex gap-2.5 text-[14px] text-ink"><span className="mono text-link">#</span><span>{q}</span></li>
                     ))}
                   </ul>
                 </div>
@@ -99,6 +116,7 @@ export function RoomScreen({ room }: { room: RoomView }) {
               resetLabel={room.budget.resetLabel}
             />
           </div>
+          <LedgerLegend className="mt-3" />
         </section>
 
         <section className="grid gap-6 border-b border-mist py-10 md:grid-cols-2">
@@ -126,17 +144,37 @@ export function RoomScreen({ room }: { room: RoomView }) {
           <h2 className="h3 mb-4">Proof</h2>
           <div className="flex flex-wrap gap-x-8 gap-y-3 text-[14px]">
             {room.proof.latestPayoutTx && (
-              <a href={baseScanTx(room.proof.latestPayoutTx)} target="_blank" rel="noreferrer" className="mono text-electric hover:underline">latest payout {shortHash(room.proof.latestPayoutTx)} ↗</a>
+              <a href={baseScanTx(room.proof.latestPayoutTx)} target="_blank" rel="noreferrer" className="mono text-link hover:underline">latest payout {shortHash(room.proof.latestPayoutTx)} ↗</a>
             )}
             {room.proof.latestRevertTx && (
-              <a href={baseScanTx(room.proof.latestRevertTx)} target="_blank" rel="noreferrer" className="mono text-electric hover:underline">over-cap revert {shortHash(room.proof.latestRevertTx)} ↗</a>
+              <a href={baseScanTx(room.proof.latestRevertTx)} target="_blank" rel="noreferrer" className="mono text-link hover:underline">over-cap revert {shortHash(room.proof.latestRevertTx)} ↗</a>
             )}
-            <a href={`${baseScanAddress(room.proof.payer)}#code`} target="_blank" rel="noreferrer" className="text-electric hover:underline">verified payer contract ↗</a>
-            <a href="/proof" className="text-electric hover:underline">all proof →</a>
+            <a href={`${baseScanAddress(room.proof.payer)}#code`} target="_blank" rel="noreferrer" className="text-link hover:underline">verified payer contract ↗</a>
+            <a href="/proof" className="text-link hover:underline">all proof →</a>
           </div>
         </section>
       </main>
       <Footer />
     </>
+  );
+}
+
+function Stat({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <dt className="eyebrow text-fog">{label}</dt>
+      <dd className="mono mt-0.5 text-[15px] font-medium text-ink">{value}</dd>
+    </div>
+  );
+}
+
+function StatLink({ label, value, href }: { label: string; value: string; href: string }) {
+  return (
+    <div>
+      <dt className="eyebrow text-fog">{label}</dt>
+      <dd className="mono mt-0.5 text-[15px] font-medium">
+        <a href={href} target="_blank" rel="noreferrer" className="text-link hover:underline">{value} ↗</a>
+      </dd>
+    </div>
   );
 }

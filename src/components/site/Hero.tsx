@@ -1,10 +1,11 @@
 import { ButtonLink } from "@/components/ui/Button";
 import { Pill } from "@/components/ui/Pill";
 import { BudgetBar } from "@/components/BudgetBar";
+import { LedgerLegend } from "@/components/LedgerLegend";
 import { VerdictRow } from "@/components/VerdictRow";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { getShowcase } from "@/lib/showcase";
-import { SHOWCASE_SLUG } from "./Nav";
+import { SHOWCASE_SLUG } from "@/lib/room-view";
 import { EdgeDecor } from "./EdgeDecor";
 
 export async function Hero() {
@@ -18,7 +19,7 @@ export async function Hero() {
         <h1 className="h-display mt-4">Pay members for real work. Never past your cap.</h1>
         <p className="body-lg mx-auto mt-5 max-w-[620px] text-smoke">
           Your project keeps the budget in its own Base Account. Ovryth pays members who do real work in your Telegram
-          within minutes, refuses farmers in public, and can never spend past your weekly cap.
+          within minutes, refuses duplicate and low-effort work in public, and can never spend past your weekly cap.
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
           <ButtonLink href="/open" variant="primary">Open a room</ButtonLink>
@@ -32,9 +33,9 @@ export async function Hero() {
             <div className="mb-5 flex items-center justify-between gap-3">
               <div className="flex items-center gap-2.5">
                 <span className="text-[15px] font-semibold text-ink">{showcase.name}</span>
-                <Pill>seeded room</Pill>
+                <Pill>demo room</Pill>
               </div>
-              <a href="/room" className="text-[13px] text-electric hover:underline">Open room →</a>
+              <a href="/room" className="text-[13px] text-link hover:underline">Open room →</a>
             </div>
 
             <BudgetBar
@@ -44,6 +45,8 @@ export async function Hero() {
               reverted={showcase.reverted}
               resetLabel={showcase.resetLabel}
             />
+            <LedgerLegend className="mt-3" />
+            <p className="mt-3 text-[12px] text-fog">Demo room. Every transaction below is a real Base receipt.</p>
 
             <div className="mt-6">
               {showcase.rows.length > 0 ? (

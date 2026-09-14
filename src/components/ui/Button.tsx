@@ -6,7 +6,7 @@ type Variant = "primary" | "secondary" | "ghost";
 const base =
   "inline-flex items-center justify-center gap-2 rounded-pill font-medium transition-colors duration-150 disabled:opacity-40 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2";
 
-const sizes = "text-[14px] leading-none px-[18px] py-[11px]";
+const sizes = "text-[14px] leading-none px-[18px] py-[11px] min-h-[44px]";
 
 const variants: Record<Variant, string> = {
   // Near-black pill, never a colored fill.

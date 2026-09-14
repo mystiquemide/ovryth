@@ -55,10 +55,10 @@ export function Custody() {
 
         <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-[14px]">
           <span className="text-smoke">One transaction, nothing rests in between.</span>
-          <a href={baseScanTx(TRACED_TX)} target="_blank" rel="noreferrer" className="mono text-electric hover:underline">
+          <a href={baseScanTx(TRACED_TX)} target="_blank" rel="noreferrer" className="mono text-link hover:underline">
             traced payout {shortHash(TRACED_TX)} ↗
           </a>
-          <a href={`${baseScanAddress(PAYER)}#code`} target="_blank" rel="noreferrer" className="text-electric hover:underline">
+          <a href={`${baseScanAddress(PAYER)}#code`} target="_blank" rel="noreferrer" className="text-link hover:underline">
             verified payer contract ↗
           </a>
         </div>

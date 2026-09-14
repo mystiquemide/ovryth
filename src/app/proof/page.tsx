@@ -10,7 +10,7 @@ export default async function ProofPage() {
   return (
     <>
       <Nav />
-      <main className="mx-auto max-w-[1064px] px-6 py-16">
+      <main id="main-content" className="mx-auto max-w-[1064px] px-6 py-16">
         <p className="eyebrow">On chain, not on trust</p>
         <h1 className="h1 mt-3 max-w-[620px]">Proof</h1>
         <p className="body-lg mt-4 max-w-[620px] text-smoke">
@@ -25,7 +25,7 @@ export default async function ProofPage() {
               <div>
                 {row.value ? (
                   row.href ? (
-                    <a href={row.href} target="_blank" rel="noreferrer" className="mono block break-all text-[13px] text-electric hover:underline">
+                    <a href={row.href} target="_blank" rel="noreferrer" className="mono block break-all text-[13px] text-link hover:underline">
                       {row.value} ↗
                     </a>
                   ) : (

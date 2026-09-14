@@ -1,6 +1,6 @@
 import { TelegramThread } from "@/components/TelegramThread";
 import { getShowcase } from "@/lib/showcase";
-import { SHOWCASE_SLUG } from "./Nav";
+import { SHOWCASE_SLUG } from "@/lib/room-view";
 
 const BOT_URL = "https://t.me/Ovryth_bot";
 
@@ -9,7 +9,7 @@ const STEPS = [
   { n: "2", title: "DM the bot your wallet", body: "Send /wallet 0x… once. That address is where your USDC lands. Nothing else." },
   { n: "3", title: "Answer a pinned question", body: "Post a real, substantive answer to one of the pinned questions below." },
   { n: "4", title: "Get paid within minutes", body: "Ovryth replies in-thread with the amount, the reason, and a BaseScan link to the transfer." },
-  { n: "5", title: "Try to farm it", body: "Copy the answer from a second account. It gets refused in public, with the reason." },
+  { n: "5", title: "Try to game it", body: "Copy the answer from a second account. It gets refused in public, with the reason." },
 ];
 
 export async function JudgePath() {
@@ -54,7 +54,7 @@ export async function JudgePath() {
                 <ul className="space-y-3">
                   {showcase.questions.map((q, i) => (
                     <li key={i} className="flex gap-2.5 text-[14px] text-ink">
-                      <span className="mono text-electric">#</span>
+                      <span className="mono text-link">#</span>
                       <span>{q}</span>
                     </li>
                   ))}

@@ -50,7 +50,7 @@ export default function DocsPage() {
   return (
     <>
       <Nav />
-      <main className="mx-auto max-w-[1064px] px-6 py-16">
+      <main id="main-content" className="mx-auto max-w-[1064px] px-6 py-16">
         <p className="eyebrow">Documentation</p>
         <h1 className="h1 mt-3">Ovryth docs</h1>
         <p className="body-lg mt-4 max-w-[640px] text-smoke">Everything needed to understand, use, and build on Ovryth: payroll for real community work, paid in USDC on Base.</p>
@@ -136,7 +136,7 @@ export default function DocsPage() {
 
             <section className="mt-12">
               <H id="technical">Technical details</H>
-              <P>Chain: Base mainnet, chain id 8453. USDC <Code>0x8335…2913</Code>. Coinbase SpendPermissionManager <Code>0xf852…67Ad</Code>. OvrythPayer <Code>0x4854…3999</Code>, verified on BaseScan, with no withdraw, no arbitrary call, and no way to hold funds. The payer&apos;s <Code>pay()</Code> approves the permission once, spends within the cap, and transfers to the member in a single transaction. Stack: Next.js App Router, viem, Prisma on Neon Postgres, and a raw Telegram Bot API webhook. See <a href="/proof" className="text-electric hover:underline">/proof</a> for the on-chain artifacts.</P>
+              <P>Chain: Base mainnet, chain id 8453. USDC <Code>0x8335…2913</Code>. Coinbase SpendPermissionManager <Code>0xf852…67Ad</Code>. OvrythPayer <Code>0x4854…3999</Code>, verified on BaseScan, with no withdraw, no arbitrary call, and no way to hold funds. The payer&apos;s <Code>pay()</Code> approves the permission once, spends within the cap, and transfers to the member in a single transaction. Stack: Next.js App Router, viem, Prisma on Neon Postgres, and a raw Telegram Bot API webhook. See <a href="/proof" className="text-link hover:underline">/proof</a> for the on-chain artifacts.</P>
             </section>
           </div>
         </div>

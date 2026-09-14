@@ -38,7 +38,7 @@ function PathCard({ title, need, steps, cta }: { title: string; need: string[]; 
         <div className="eyebrow mb-2 text-fog">What you need</div>
         <ul className="space-y-1.5">
           {need.map((x) => (
-            <li key={x} className="flex gap-2 text-[14px] text-ink"><span className="text-electric">·</span>{x}</li>
+            <li key={x} className="flex gap-2 text-[14px] text-ink"><span className="text-link">·</span>{x}</li>
           ))}
         </ul>
       </div>
@@ -59,7 +59,7 @@ export default function OnboardPage() {
   return (
     <>
       <Nav />
-      <main className="mx-auto max-w-[820px] px-6 py-16">
+      <main id="main-content" className="mx-auto max-w-[820px] px-6 py-16">
         <p className="eyebrow">Onboard</p>
         <h1 className="h1 mt-3 max-w-[620px]">New to Ovryth? Start here</h1>
         <p className="body-lg mt-4 max-w-[640px] text-smoke">
@@ -107,8 +107,8 @@ export default function OnboardPage() {
 
         <section className="mt-14 border-t border-mist pt-10">
           <p className="text-[15px] text-smoke">
-            Ready? <a href="/open" className="text-electric hover:underline">Open a room</a> or{" "}
-            <a href="/room" className="text-electric hover:underline">look at a live room</a> first.
+            Ready? <a href="/open" className="text-link hover:underline">Open a room</a> or{" "}
+            <a href="/room" className="text-link hover:underline">look at a live room</a> first.
           </p>
         </section>
       </main>

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Wordmark } from "@/components/ui/Logo";
+import { MinimalFooter } from "@/components/site/MinimalFooter";
 import { BudgetBar } from "@/components/BudgetBar";
 import { PermissionCard } from "@/components/PermissionCard";
 import { RulesPanel } from "@/components/RulesPanel";
@@ -32,8 +33,11 @@ function Row({ label, value }: { label: string; value: React.ReactNode }) {
 export function ConsoleScreen({ room, notes, publicHref }: { room: RoomView; notes: OperatorNotes; publicHref: string }) {
   const status = STATUS[room.status] ?? { kind: "info" as VerdictKind, word: room.status };
 
+  const lowGas = notes.operatorGasEth !== null && Number(notes.operatorGasEth) < 0.0002;
+
   return (
-    <main className="mx-auto max-w-[1064px] px-6 py-8">
+    <>
+    <main id="main-content" className="mx-auto max-w-[1064px] px-6 py-8">
       <Link href="/" aria-label="Ovryth home" className="inline-block"><Wordmark size={24} /></Link>
 
       <header className="mt-8 flex flex-wrap items-center justify-between gap-3 border-b border-mist pb-8">
@@ -42,7 +46,7 @@ export function ConsoleScreen({ room, notes, publicHref }: { room: RoomView; not
           <h1 className="h2">{room.name}</h1>
           <VerdictPill kind={status.kind}>{status.word}</VerdictPill>
         </div>
-        <a href={publicHref} className="text-[13px] text-electric hover:underline">View public room →</a>
+        <a href={publicHref} className="text-[13px] text-link hover:underline">View public room →</a>
       </header>
 
       <section className="py-8">
@@ -97,7 +101,10 @@ export function ConsoleScreen({ room, notes, publicHref }: { room: RoomView; not
               <Row label="Pending jobs" value={<span className="mono">{notes.pendingJobs}</span>} />
               <div className="flex items-center justify-between gap-4">
                 <span className="text-smoke">Operator gas</span>
-                <span className="mono text-ink">{notes.operatorGasEth ? `${notes.operatorGasEth} ETH` : "unknown"}</span>
+                <span className={`mono ${lowGas ? "text-hold" : "text-ink"}`}>
+                  {notes.operatorGasEth ? `${notes.operatorGasEth} ETH` : "unknown"}
+                  {lowGas && <span className="ml-2 text-[11px] font-medium uppercase tracking-wide">low</span>}
+                </span>
               </div>
               <div className="flex items-center justify-between gap-4">
                 <span className="text-smoke">Operator</span>
@@ -117,5 +124,7 @@ export function ConsoleScreen({ room, notes, publicHref }: { room: RoomView; not
         </aside>
       </div>
     </main>
+    <MinimalFooter />
+    </>
   );
 }

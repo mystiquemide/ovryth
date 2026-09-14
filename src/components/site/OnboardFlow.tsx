@@ -182,8 +182,17 @@ export function OnboardFlow() {
       )}
 
       {step === "connect" && (
-        <Card title="Connect your Base Account" body="Ovryth needs a Base Account (smart wallet) so it can hold the budget and sign a spend permission. Plain EOAs are not supported.">
-          <Button onClick={connect} disabled={busy}>{busy ? "Connecting…" : "Connect Base Account"}</Button>
+        <Card title="Connect your Base Account" body="A Base Account is a smart wallet that holds the weekly budget and signs a spend permission naming Ovryth the only spender. Plain EOAs can't do this, which is why a Base Account is required.">
+          <ol className="mb-6 space-y-2 text-[14px] text-smoke">
+            {["Connect your Base Account", "Set a weekly USDC cap", "Sign the spend permission", "Link your Telegram group"].map((s, i) => (
+              <li key={s} className="flex gap-2.5"><span className="mono text-fog">{i + 1}.</span>{s}</li>
+            ))}
+          </ol>
+          <div className="flex flex-wrap items-center gap-3">
+            <Button onClick={connect} disabled={busy}>{busy ? "Connecting…" : "Connect Base Account"}</Button>
+            <a href="/room" className="inline-flex min-h-[44px] items-center text-[14px] text-link hover:underline">View the live room →</a>
+          </div>
+          <p className="mt-4 text-[13px] text-fog">Just looking? The live room shows a real weekly cap, payouts, and refusals on Base mainnet.</p>
         </Card>
       )}
 
@@ -236,8 +245,8 @@ export function OnboardFlow() {
       {step === "done" && slug && (
         <Card title="Room is live" body="Ovryth is now watching your group. The first real contribution gets paid within minutes.">
           <div className="space-y-2">
-            <a href={`/r/${slug}`} className="block text-[14px] text-electric hover:underline">Public room page →</a>
-            <a href={`/console/${slug}`} className="block text-[14px] text-electric hover:underline">Owner console →</a>
+            <a href={`/r/${slug}`} className="block text-[14px] text-link hover:underline">Public room page →</a>
+            <a href={`/console/${slug}`} className="block text-[14px] text-link hover:underline">Owner console →</a>
           </div>
         </Card>
       )}

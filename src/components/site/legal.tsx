@@ -5,7 +5,7 @@ export function LegalLayout({ title, updated, children }: { title: string; updat
   return (
     <>
       <Nav />
-      <main className="mx-auto max-w-[720px] px-6 py-16">
+      <main id="main-content" className="mx-auto max-w-[720px] px-6 py-16">
         <p className="eyebrow">Legal</p>
         <h1 className="h1 mt-3">{title}</h1>
         <p className="mono mt-3 text-[13px] text-fog">Last updated {updated}</p>
@@ -29,7 +29,7 @@ export function Bullets({ items }: { items: string[] }) {
   return (
     <ul className="space-y-2">
       {items.map((x) => (
-        <li key={x} className="flex gap-2.5"><span className="text-electric">·</span><span>{x}</span></li>
+        <li key={x} className="flex gap-2.5"><span className="text-link">·</span><span>{x}</span></li>
       ))}
     </ul>
   );

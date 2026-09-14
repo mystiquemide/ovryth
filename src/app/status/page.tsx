@@ -23,7 +23,7 @@ export default async function StatusPage() {
   return (
     <>
       <Nav />
-      <main className="mx-auto max-w-[820px] px-6 py-16">
+      <main id="main-content" className="mx-auto max-w-[820px] px-6 py-16">
         <p className="eyebrow">System status</p>
 
         <div className="mt-4 flex items-center gap-3">

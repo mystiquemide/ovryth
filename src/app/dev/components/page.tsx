@@ -29,7 +29,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 
 export default function ComponentsGallery() {
   return (
-    <main className="mx-auto max-w-[1064px] px-6 py-16">
+    <main id="main-content" className="mx-auto max-w-[1064px] px-6 py-16">
       <p className="eyebrow">Ovryth design system</p>
       <h1 className="h-display mt-2">Components</h1>
       <p className="body-lg mt-4 max-w-2xl text-smoke">
@@ -160,7 +160,7 @@ export default function ComponentsGallery() {
           <StatusBanner tone="warn" title="Paused" action={<Button variant="secondary">Resume</Button>}>
             This room is paused. No new contributions are scored until you resume.
           </StatusBanner>
-          <StatusBanner tone="revoked" title="Revoked" action={<a className="text-[13px] text-electric hover:underline" href={`https://basescan.org/tx/${TX_REVERT}`} target="_blank" rel="noreferrer">View tx ↗</a>}>
+          <StatusBanner tone="revoked" title="Revoked" action={<a className="text-[13px] text-link hover:underline" href={`https://basescan.org/tx/${TX_REVERT}`} target="_blank" rel="noreferrer">View tx ↗</a>}>
             The spend permission was revoked. Ovryth has stopped and can no longer move funds.
           </StatusBanner>
           <EmptyState action={<Button variant="primary">Open a room</Button>}>
