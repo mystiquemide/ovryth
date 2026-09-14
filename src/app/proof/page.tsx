@@ -1,5 +1,4 @@
 import { Nav } from "@/components/site/Nav";
-import { Footer } from "@/components/site/Footer";
 import { getProofArtifacts } from "@/lib/proof";
 
 export const metadata = { title: "Proof · Ovryth" };
@@ -40,7 +39,6 @@ export default async function ProofPage() {
           ))}
         </div>
       </main>
-      <Footer />
     </>
   );
 }
