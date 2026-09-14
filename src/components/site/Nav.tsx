@@ -56,7 +56,7 @@ export function Nav() {
         </Link>
 
         <div className="hidden items-center gap-1 md:flex">
-          <NavLink href={`/r/${SHOWCASE_SLUG}`}>Room</NavLink>
+          <NavLink href="/room">Room</NavLink>
           <NavLink href="/proof">Proof</NavLink>
           <IconLink href={GITHUB_URL} label="Ovryth on GitHub"><GitHubMark /></IconLink>
           <IconLink href={X_URL} label="Ovryth on X"><XMark /></IconLink>

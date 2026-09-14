@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { ButtonLink } from "@/components/ui/Button";
 import { Wordmark } from "@/components/ui/Logo";
-import { SHOWCASE_SLUG } from "./Nav";
 
 const GITHUB_URL = "https://github.com/mystiquemide/ovryth";
 const X_URL = "https://x.com/ovryth";
@@ -34,7 +33,7 @@ export function Footer() {
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <ButtonLink href="/onboard" variant="primary">Open a room</ButtonLink>
-            <ButtonLink href={`/r/${SHOWCASE_SLUG}`} variant="secondary">See the room →</ButtonLink>
+            <ButtonLink href="/room" variant="secondary">See the room →</ButtonLink>
           </div>
         </div>
       </section>
@@ -53,7 +52,7 @@ export function Footer() {
             <div className="flex gap-16">
               <div className="flex flex-col gap-3">
                 <div className="eyebrow text-fog">Product</div>
-                <FootLink href={`/r/${SHOWCASE_SLUG}`}>Room</FootLink>
+                <FootLink href="/room">Room</FootLink>
                 <FootLink href="/proof">Proof</FootLink>
                 <FootLink href="/onboard">Open a room</FootLink>
               </div>

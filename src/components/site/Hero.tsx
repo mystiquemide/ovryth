@@ -20,7 +20,7 @@ export async function Hero() {
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
           <ButtonLink href="/onboard" variant="primary">Open a room</ButtonLink>
-          <ButtonLink href={`/r/${SHOWCASE_SLUG}`} variant="secondary">See the room →</ButtonLink>
+          <ButtonLink href="/room" variant="secondary">See the room →</ButtonLink>
         </div>
       </div>
 
@@ -32,7 +32,7 @@ export async function Hero() {
                 <span className="text-[15px] font-semibold text-ink">{showcase.name}</span>
                 <Pill>seeded room</Pill>
               </div>
-              <a href={`/r/${showcase.slug}`} className="text-[13px] text-electric hover:underline">Open room →</a>
+              <a href="/room" className="text-[13px] text-electric hover:underline">Open room →</a>
             </div>
 
             <BudgetBar
