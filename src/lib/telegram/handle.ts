@@ -28,6 +28,7 @@ export interface TgUpdate {
 }
 
 const HOLD_MS = 72 * 60 * 60 * 1000;
+const ORIGIN = process.env.PUBLIC_ORIGIN ?? "https://ovryth.vercel.app";
 
 export async function handleUpdate(update: TgUpdate): Promise<void> {
   if (update.my_chat_member) return handleChatMember(update.my_chat_member);
@@ -39,10 +40,44 @@ export async function handleUpdate(update: TgUpdate): Promise<void> {
   if (!msg.text || !msg.from || msg.from.is_bot) return;
 
   const text = msg.text.trim();
+  const cmd = text.split(/\s+/)[0].toLowerCase().replace(/@.*$/, "");
   if (text.startsWith("/link")) return handleLink(msg, text);
   if (text.toLowerCase().startsWith("#question")) return handleQuestion(msg, text);
+  if (cmd === "/rules" || cmd === "/start" || cmd === "/help" || cmd === "/commands") return handleGroupInfo(msg, cmd);
   if (text.startsWith("/")) return; // ignore other slash commands in-group
   return handleContribution(msg, text);
+}
+
+/** In-group info commands: show this room's rules and how to get paid. Silent if not an Ovryth group. */
+async function handleGroupInfo(msg: TgMessage, cmd: string): Promise<void> {
+  const room = await prisma.room.findUnique({
+    where: { telegramChatId: BigInt(msg.chat.id) },
+    include: { rulesVersions: { orderBy: { version: "desc" }, take: 1 } },
+  });
+  if (!room) return;
+  const rv = room.rulesVersions[0];
+  const link = `${ORIGIN}/r/${room.slug}`;
+
+  if (cmd === "/rules") {
+    const cats = ((rv?.categories as { label: string; minUsdc: number; maxUsdc: number }[] | undefined) ?? [])
+      .map((c) => `• ${c.label}: ${c.minUsdc}–${c.maxUsdc} USDC`)
+      .join("\n");
+    const body = [
+      `Rules for ${room.name}:`,
+      cats,
+      rv?.freeText ? `What we value: ${rv.freeText}` : "",
+      rv ? `Member weekly cap: ${Number(rv.memberWeeklyCapUsdc) / 1_000_000} USDC.` : "",
+      `Room: ${link}`,
+    ].filter(Boolean).join("\n");
+    await sendMessage(msg.chat.id, body, { replyToMessageId: msg.message_id });
+    return;
+  }
+
+  await sendMessage(
+    msg.chat.id,
+    `Ovryth pays for real work in this room, in USDC on Base. DM me /wallet 0x… to link where you get paid, then contribute here. Rules: ${link}`,
+    { replyToMessageId: msg.message_id },
+  );
 }
 
 /** Bind a Telegram group to a pending room via its one-time link code: "/link <code>". */
