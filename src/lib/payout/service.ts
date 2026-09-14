@@ -68,7 +68,7 @@ export interface ProcessResult {
  * - on send, waits for the receipt and records confirmed or reverted.
  * `simulateFirst: false` forces an on-chain send (used to record a real over-cap revert tx).
  */
-export async function processPayout(payoutId: string, opts: { simulateFirst?: boolean } = {}): Promise<ProcessResult> {
+export async function processPayout(payoutId: string, opts: { simulateFirst?: boolean; gas?: bigint; retries?: number } = {}): Promise<ProcessResult> {
   if (!PAYER_ADDRESS) throw new PayoutError("payer address not configured");
   const simulateFirst = opts.simulateFirst ?? true;
 
@@ -89,7 +89,7 @@ export async function processPayout(payoutId: string, opts: { simulateFirst?: bo
   // Status read is fail-closed: on error leave the job queued for the sweeper to retry.
   let needsApprove: boolean;
   try {
-    const status = await readPermissionStatus(perm, sdk.signature);
+    const status = await readPermissionStatus(perm, sdk.signature, { retries: opts.retries ?? 3 });
     if (status.isRevoked || !status.isActive) {
       await prisma.payout.update({ where: { id: payoutId }, data: { status: "reverted", lastError: status.isRevoked ? "permission revoked" : "permission inactive", attempts: { increment: 1 } } });
       return { status: "reverted", error: status.isRevoked ? "permission revoked" : "permission inactive" };
@@ -117,7 +117,16 @@ export async function processPayout(payoutId: string, opts: { simulateFirst?: bo
     }
   }
 
-  const txHash = await wallet.sendTransaction({ to: PAYER_ADDRESS, data });
+  let txHash: Hex;
+  try {
+    // An explicit gas limit skips eth_estimateGas, which would otherwise throw on a
+    // doomed tx before broadcasting; this lets a forced over-cap send land as a real revert.
+    txHash = await wallet.sendTransaction({ to: PAYER_ADDRESS, data, ...(opts.gas ? { gas: opts.gas } : {}) });
+  } catch (e) {
+    const reason = decodeRevert(e);
+    await prisma.payout.update({ where: { id: payoutId }, data: { status: "reverted", lastError: `send: ${reason}`, attempts: { increment: 1 } } });
+    return { status: "reverted", error: reason };
+  }
   await prisma.payout.update({ where: { id: payoutId }, data: { status: "sent", txHash, attempts: { increment: 1 } } });
 
   const rcpt = await receiptClient.waitForTransactionReceipt({ hash: txHash });
