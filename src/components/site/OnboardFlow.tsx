@@ -266,10 +266,27 @@ export function OnboardFlow() {
       )}
 
       {step === "link" && slug && (
-        <Card title="Link your Telegram group" body="Add @Ovryth_bot to your group as an admin, then send the command below in the group. This page updates the moment the bot links.">
-          <div className="mb-4 rounded-card border border-mist bg-snow p-4">
-            <div className="eyebrow mb-1 text-fog">Send in your group</div>
-            <code className="mono text-[15px] text-ink">/link {linkCode}</code>
+        <Card title="Link your Telegram group" body="Add the Ovryth bot to your group as an admin, then send the command below in the group. This page updates the moment the bot links.">
+          <a
+            href="https://t.me/Ovryth_bot"
+            target="_blank"
+            rel="noreferrer"
+            className="mb-4 inline-flex min-h-[44px] items-center rounded-pill border border-electric/40 bg-snow px-4 text-[14px] font-medium text-link hover:underline"
+          >
+            Open @Ovryth_bot in Telegram ↗
+          </a>
+          <div className="mb-4 flex items-center justify-between gap-3 rounded-card border border-mist bg-snow p-4">
+            <div>
+              <div className="eyebrow mb-1 text-fog">Send in your group</div>
+              <code className="mono text-[15px] text-ink">/link {linkCode}</code>
+            </div>
+            <button
+              type="button"
+              onClick={() => navigator.clipboard?.writeText(`/link ${linkCode}`)}
+              className="inline-flex min-h-[44px] shrink-0 items-center rounded-pill border border-mist px-3 text-[13px] text-smoke transition-colors hover:border-ink/40 hover:text-ink"
+            >
+              Copy
+            </button>
           </div>
           <div className="flex items-center gap-2 text-[13px] text-smoke">
             <span className="h-2 w-2 animate-pulse rounded-pill bg-electric" />
