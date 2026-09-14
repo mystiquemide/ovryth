@@ -1,0 +1,4 @@
+# Foundry
+out/
+cache/
+# broadcast/ keeps the deployment record (no secrets); cache/ holds sensitive values and is ignored.
