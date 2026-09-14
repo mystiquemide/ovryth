@@ -43,7 +43,11 @@ export function OnboardFlow() {
   async function getProvider(): Promise<Provider> {
     if (providerRef.current) return providerRef.current;
     const { createBaseAccountSDK } = await import("@base-org/account/browser");
-    const sdk = createBaseAccountSDK({ appName: "Ovryth" });
+    const sdk = createBaseAccountSDK({
+      appName: "Ovryth",
+      // Route sponsorship through our own proxy so the CDP key stays server-side.
+      paymasterUrls: { [CHAIN_ID]: `${window.location.origin}/api/paymaster` },
+    });
     providerRef.current = sdk.getProvider() as unknown as Provider;
     return providerRef.current;
   }

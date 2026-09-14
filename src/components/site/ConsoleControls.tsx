@@ -43,7 +43,11 @@ export function ConsoleControls({
   async function getProvider(): Promise<Provider> {
     if (providerRef.current) return providerRef.current;
     const { createBaseAccountSDK } = await import("@base-org/account/browser");
-    providerRef.current = createBaseAccountSDK({ appName: "Ovryth" }).getProvider() as unknown as Provider;
+    providerRef.current = createBaseAccountSDK({
+      appName: "Ovryth",
+      // Route sponsorship through our own proxy so the CDP key stays server-side.
+      paymasterUrls: { 8453: `${window.location.origin}/api/paymaster` },
+    }).getProvider() as unknown as Provider;
     return providerRef.current;
   }
 
