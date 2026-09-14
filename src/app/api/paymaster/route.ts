@@ -9,6 +9,7 @@ export const dynamic = "force-dynamic";
 const ALLOWED = new Set([
   "pm_getPaymasterStubData",
   "pm_getPaymasterData",
+  "pm_getAcceptedPaymentTokens",
   "pm_sponsorUserOperation",
   "eth_sendUserOperation",
   "eth_estimateUserOperationGas",
