@@ -75,12 +75,12 @@ No statistics rail, no three-column "how it works", no marketing section.
 Stepper, one column, 560px.
 1. Connect Base Account (WalletConnect component, wrong network banner).
 2. Link Telegram group: instruction "Add @ovryth_bot as admin, then send /link in the group", code field auto-fills when the bot receives it (poll every 3 s).
-3. Budget: weekly allowance input (10 to 5,000 USDC), period fixed at 7 days, end 90 days shown, spender shown as the payer contract with link. Button "Sign permission". TxState: awaiting signature, then "Permission signed. Registers on chain with the first payout." with the hash.
+3. Budget: weekly allowance input (10 to 5,000 USDC), period fixed at 7 days, end 90 days shown, spender shown as the payer contract with link. Button "Sign permission". The hosted consent is paid by the owner account, not app-sponsored, and approval registers on chain with the first payout.
 4. Rules: RulesPanel in edit mode with three default categories prefilled (support answer 0.50 to 3, translation 2 to 10, guide 5 to 25), member weekly cap 25, floors 30 days account age, 3 days tenure, free text placeholder. Button "Open room".
 5. Done: room slug, public page link, console link, what happens next.
 
 ### Console `/console/[slug]`
-Header with room name and status pill. BudgetBar full width. Left: PermissionCard, pause toggle (signature required), in-console revoke button (one signature via the paymaster-sponsored wallet call, verified on chain before the room flips). Right: RulesPanel in edit mode showing the current version number and effective time (no history list). Below: this week's ledger (VerdictRows), operator notes (last tick, pending jobs, operator gas).
+Header with room name and status pill. BudgetBar full width. Left: PermissionCard, pause toggle (signature required), in-console revoke button (one signature from the owner Base Account, paid by that account and verified on chain before the room flips). Right: RulesPanel in edit mode showing the current version number and effective time (no history list). Below: this week's ledger (VerdictRows), operator notes (last tick, pending jobs, operator gas).
 
 ### Room page `/r/[slug]`
 1. Header: room name, token, status pill, "demo room" or "external room, owner 0x…" label, "Verify on BaseScan" link to the manager.
@@ -98,7 +98,8 @@ Six rows, each: label, hash or address (mono, break-all), block, BaseScan link, 
 
 ### Telegram surfaces
 - In-thread paid reply: "Paid 2.50 USDC for translation. Reason: full FAQ translated to PT-BR. tx 0x1a2b…9c (BaseScan link)". One line, no emoji.
-- In-thread refusal: "Not paid: copy of an earlier message." Reason set fixed: duplicate, off-topic, no substance, boilerplate, account too new, tenure too short, weekly cap reached, no linked wallet (with DM prompt).
+- In-thread hold: "Approved. DM me your Base wallet to get paid. The amount is held for 72 hours."
+- In-thread refusal: "Not paid: copy of an earlier message." Reason set fixed: duplicate, off-topic, no substance, boilerplate, account too new, tenure too short, weekly cap reached.
 - Budget reached: "This room's weekly budget is spent. The cap resets every 7 days."
 - DM: /wallet 0x… (validates, confirms), /rules (link to the room page). No /history.
 - Pinned question format in the demo room: "#question What does the OvrythPayer contract prevent, and how would you check it on BaseScan?" Three of these, pinned.

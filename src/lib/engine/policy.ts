@@ -2,7 +2,9 @@ import { type Decision, type MemberFacts, type ModelVerdict, type RoomFacts, typ
 
 /**
  * The policy layer. Deterministic. It takes the model's verdict and the facts and makes the final call.
- * It can only LOWER or ZERO an amount, never raise it. The chain enforces the real cap on top of this.
+ * It normalizes the model's proposal into the owner's category range, including raising a
+ * below-minimum proposal to the category floor. Caps may then lower or refuse it, and the
+ * chain enforces the real spending limit on top of this.
  */
 
 export const CONFIDENCE_FLOOR = 0.55;
@@ -43,7 +45,8 @@ export function decide(
     return refuse("TENURE_TOO_SHORT", verdict.reasonText, category.key, [`tenure ${member.tenureDays}d < min ${rules.minTenureDays}d`]);
   }
 
-  // 5. Clamp the amount into the category range. Policy can only lower.
+  // 5. Normalize the amount into the owner-defined category range. A proposal below the
+  // category minimum is raised to the owner's floor; one above the maximum is lowered.
   let amount = verdict.proposedAmountUsdc;
   if (amount > category.maxUsdc) {
     notes.push(`clamped ${amount} down to category max ${category.maxUsdc}`);
@@ -67,7 +70,7 @@ export function decide(
     return refuse("ROOM_ALLOWANCE", verdict.reasonText, category.key, [`room weekly allowance exhausted`]);
   }
 
-  // A payout may be lowered to fit the tightest remaining cap, never raised, and never below the category min.
+  // After normalization, a payout may be lowered to fit the tightest remaining cap, but never below the category min.
   const ceiling = Math.min(memberRemaining, roomDailyRemaining, room.remainingAllowanceUsdc);
   if (amount > ceiling) {
     if (ceiling < category.minUsdc) {

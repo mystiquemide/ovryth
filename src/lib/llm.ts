@@ -6,7 +6,8 @@ import { z } from "zod";
  * Ovryth LLM seam. The model classifies and explains; the policy layer decides; the chain enforces.
  * The zod schema is the single source of truth: it is converted to JSON Schema for the provider
  * and then used to validate the response. Nothing unvalidated leaves this function.
- * Gemini flash primary (thinking off), Groq fallback.
+ * Generic generateJSON defaults to Gemini flash (thinking off), then Groq fallback.
+ * The contribution classifier explicitly overrides that order to Groq primary, Gemini fallback.
  */
 
 export const MODELS = {
@@ -20,7 +21,7 @@ export interface GenerateOptions {
   timeoutMs?: number;
   /** Force a single provider (used by the fixture gate to measure one model at a time). */
   provider?: "gemini" | "groq";
-  /** Provider order when `provider` is not set. Defaults to gemini then groq. */
+  /** Provider order when `provider` is not set. Generic default is Gemini then Groq; callers may override it. */
   order?: Array<"gemini" | "groq">;
   failPrimary?: boolean;
 }
