@@ -5,7 +5,7 @@ import { getOperatorNotes } from "@/lib/console";
 
 export async function generateMetadata() {
   const room = await getRoomView(SHOWCASE_SLUG);
-  return { title: room ? `${room.name} console · Ovryth` : "Console · Ovryth" };
+  return { title: room ? `${room.name} console · Ovryth` : "Console · Ovryth", alternates: { canonical: "/console" } };
 }
 
 export default async function ConsolePage() {

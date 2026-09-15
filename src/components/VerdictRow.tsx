@@ -17,7 +17,7 @@ export interface VerdictRowData {
 /** The core ledger row. Grid on md, stacks on mobile with amount first. */
 export function VerdictRow({ row }: { row: VerdictRowData }) {
   return (
-    <div className="grid grid-cols-1 gap-2 border-b border-mist py-3 md:grid-cols-[92px_150px_130px_140px_1fr_120px] md:items-center md:gap-4">
+    <div className="grid grid-cols-1 gap-2 border-b border-mist py-3 md:grid-cols-[92px_150px_130px_140px_minmax(0,1fr)_120px] md:items-center md:gap-4">
       <span className="mono text-[13px] text-fog">{row.time}</span>
 
       <span className="text-[14px] text-ink">
@@ -39,7 +39,7 @@ export function VerdictRow({ row }: { row: VerdictRowData }) {
         <AmountDisplay usdc={row.amountUsdc} paid={row.kind === "paid"} />
       </span>
 
-      <span className="text-[14px] text-smoke">
+      <span className="min-w-0 break-words text-[14px] text-smoke">
         {row.reason}
         {row.editedAfterPayment && <span className="ml-2 text-[12px] text-fog">(edited after payment)</span>}
       </span>

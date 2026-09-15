@@ -6,7 +6,7 @@ import { getOperatorNotes } from "@/lib/console";
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const room = await getRoomView(slug);
-  return { title: room ? `${room.name} console · Ovryth` : "Console · Ovryth" };
+  return { title: room ? `${room.name} console · Ovryth` : "Console · Ovryth", alternates: { canonical: `/console/${slug}` } };
 }
 
 export default async function ConsoleBySlugPage({ params }: { params: Promise<{ slug: string }> }) {

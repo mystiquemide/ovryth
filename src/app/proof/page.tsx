@@ -2,7 +2,7 @@ import { Nav } from "@/components/site/Nav";
 import { MinimalFooter } from "@/components/site/MinimalFooter";
 import { getProofArtifacts } from "@/lib/proof";
 
-export const metadata = { title: "Proof · Ovryth" };
+export const metadata = { title: "Proof · Ovryth", alternates: { canonical: "/proof" } };
 
 export default async function ProofPage() {
   const rows = await getProofArtifacts();

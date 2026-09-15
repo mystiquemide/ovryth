@@ -3,7 +3,7 @@ import { Wordmark } from "@/components/ui/Logo";
 import { OnboardFlow } from "@/components/site/OnboardFlow";
 import { MinimalFooter } from "@/components/site/MinimalFooter";
 
-export const metadata = { title: "Open a room · Ovryth" };
+export const metadata = { title: "Open a room · Ovryth", alternates: { canonical: "/open" } };
 
 export default function OpenRoomPage() {
   return (

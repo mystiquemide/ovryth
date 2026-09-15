@@ -5,7 +5,7 @@ import { getRoomView, SHOWCASE_SLUG } from "@/lib/room-view";
 
 export async function generateMetadata() {
   const room = await getRoomView(SHOWCASE_SLUG);
-  return { title: room ? `${room.name} · Ovryth room` : "Room · Ovryth" };
+  return { title: room ? `${room.name} · Ovryth room` : "Room · Ovryth", alternates: { canonical: "/room" } };
 }
 
 export default async function RoomPage() {

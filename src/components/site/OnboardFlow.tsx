@@ -334,14 +334,17 @@ function Stepper({ step }: { step: Step }) {
   const idx = steps.indexOf(step);
   const labels = ["Connect", "Budget", "Rules", "Link", "Done"];
   return (
-    <div className="mb-8 flex items-center gap-2">
-      {labels.map((l, i) => (
-        <div key={l} className="flex items-center gap-2">
-          <span className={`mono flex h-6 w-6 items-center justify-center rounded-pill text-[12px] ${i <= idx ? "bg-ink text-white" : "bg-snow text-fog"}`}>{i + 1}</span>
-          <span className={`text-[13px] ${i <= idx ? "text-ink" : "text-fog"}`}>{l}</span>
-          {i < labels.length - 1 && <span className="mx-1 h-px w-4 bg-mist" />}
-        </div>
-      ))}
+    <div className="mb-8" aria-label={`Step ${idx + 1} of ${steps.length}: ${labels[idx]}`}>
+      <p className="mono mb-3 text-[12px] text-fog sm:hidden">Step {idx + 1} of {steps.length} — {labels[idx]}</p>
+      <div className="flex items-center gap-2">
+        {labels.map((l, i) => (
+          <div key={l} className="flex items-center gap-2">
+            <span className={`mono flex h-6 w-6 items-center justify-center rounded-pill text-[12px] ${i <= idx ? "bg-ink text-white" : "bg-snow text-fog"}`}>{i + 1}</span>
+            <span className={`hidden text-[13px] sm:inline ${i <= idx ? "text-ink" : "text-fog"}`}>{l}</span>
+            {i < labels.length - 1 && <span className="mx-1 h-px w-4 bg-mist" />}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

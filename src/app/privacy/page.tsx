@@ -1,6 +1,6 @@
 import { LegalLayout, Section, Bullets } from "@/components/site/legal";
 
-export const metadata = { title: "Privacy Policy · Ovryth" };
+export const metadata = { title: "Privacy Policy · Ovryth", alternates: { canonical: "/privacy" } };
 
 export default function PrivacyPage() {
   return (

@@ -1,6 +1,6 @@
 import { LegalLayout, Section, Bullets } from "@/components/site/legal";
 
-export const metadata = { title: "Terms of Service · Ovryth" };
+export const metadata = { title: "Terms of Service · Ovryth", alternates: { canonical: "/terms" } };
 
 export default function TermsPage() {
   return (

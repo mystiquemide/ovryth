@@ -1,7 +1,8 @@
 import { Nav } from "@/components/site/Nav";
 import { MinimalFooter } from "@/components/site/MinimalFooter";
+import { DocsToc } from "@/components/site/DocsToc";
 
-export const metadata = { title: "Docs · Ovryth" };
+export const metadata = { title: "Docs · Ovryth", alternates: { canonical: "/docs" } };
 
 const TOC = [
   ["overview", "Overview"],
@@ -70,13 +71,7 @@ export default function DocsPage() {
         </div>
 
         <div className="mt-12 grid gap-12 lg:grid-cols-[200px_1fr] lg:gap-16">
-          <nav className="hidden lg:block">
-            <div className="sticky top-24 space-y-2">
-              {TOC.map(([id, label]) => (
-                <a key={id} href={`#${id}`} className="block text-[14px] text-smoke transition-colors hover:text-ink">{label}</a>
-              ))}
-            </div>
-          </nav>
+          <DocsToc items={TOC} />
 
           <div className="max-w-[680px]">
             <section>

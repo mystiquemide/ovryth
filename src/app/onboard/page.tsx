@@ -2,7 +2,7 @@ import { Nav } from "@/components/site/Nav";
 import { MinimalFooter } from "@/components/site/MinimalFooter";
 import { ButtonLink } from "@/components/ui/Button";
 
-export const metadata = { title: "Onboard · Ovryth" };
+export const metadata = { title: "Onboard · Ovryth", alternates: { canonical: "/onboard" } };
 
 const HOW = [
   ["A project funds a weekly cap", "The project puts a weekly USDC budget in its own Base Account and grants Ovryth a spend permission. The cap lives on chain and can be revoked in one signature."],

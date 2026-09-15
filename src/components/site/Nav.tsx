@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Wordmark } from "@/components/ui/Logo";
 import { ButtonLink } from "@/components/ui/Button";
 
@@ -15,12 +16,13 @@ const LINKS: { href: string; label: string }[] = [
   { href: "/status", label: "Status" },
 ];
 
-const linkCls =
-  "inline-flex min-h-[44px] items-center rounded-pill px-3 text-[14px] text-smoke transition-colors duration-150 hover:bg-snow hover:text-ink";
-
-function NavLink({ href, children }: { href: string; children: React.ReactNode }) {
+function NavLink({ href, active, children }: { href: string; active: boolean; children: React.ReactNode }) {
   return (
-    <Link href={href} className={linkCls}>
+    <Link
+      href={href}
+      aria-current={active ? "page" : undefined}
+      className={`inline-flex min-h-[44px] items-center rounded-pill px-3 text-[14px] transition-colors duration-150 hover:bg-snow hover:text-ink ${active ? "bg-snow font-medium text-ink" : "text-smoke"}`}
+    >
       {children}
     </Link>
   );
@@ -37,6 +39,8 @@ function XMark() {
 /** Floating pill nav: mark + wordmark, links, mobile menu, and the primary CTA. */
 export function Nav() {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+  const isActive = (href: string) => pathname === href || (href === "/room" && pathname.startsWith("/r/"));
 
   return (
     <header className="sticky top-4 z-50 px-4">
@@ -48,7 +52,7 @@ export function Nav() {
 
           <div className="hidden items-center gap-1 md:flex">
             {LINKS.slice(0, 4).map((l) => (
-              <NavLink key={l.href} href={l.href}>
+              <NavLink key={l.href} href={l.href} active={isActive(l.href)}>
                 {l.label}
               </NavLink>
             ))}
@@ -92,7 +96,8 @@ export function Nav() {
                 key={l.href}
                 href={l.href}
                 onClick={() => setOpen(false)}
-                className="inline-flex min-h-[44px] items-center rounded-pill px-3 text-[15px] text-ink transition-colors hover:bg-snow"
+                aria-current={isActive(l.href) ? "page" : undefined}
+                className={`inline-flex min-h-[44px] items-center rounded-pill px-3 text-[15px] transition-colors hover:bg-snow ${isActive(l.href) ? "bg-snow font-medium text-ink" : "text-ink"}`}
               >
                 {l.label}
               </Link>

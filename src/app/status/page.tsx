@@ -2,7 +2,7 @@ import { Nav } from "@/components/site/Nav";
 import { MinimalFooter } from "@/components/site/MinimalFooter";
 import { getSystemStatus, type State } from "@/lib/status";
 
-export const metadata = { title: "Status · Ovryth" };
+export const metadata = { title: "Status · Ovryth", alternates: { canonical: "/status" } };
 export const dynamic = "force-dynamic"; // always run live checks
 
 const TONE: Record<State, { dot: string; text: string; label: string }> = {
