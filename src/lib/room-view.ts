@@ -63,7 +63,13 @@ export interface RoomView {
   paidRows: VerdictRowData[];
   refusedRows: VerdictRowData[];
   totals: { paidUsdc: number; payoutCount: number; refusalCount: number };
-  proof: { latestPayoutTx: string | null; latestRevertTx: string | null; payer: string; examplePaidAmount: number | null };
+  proof: {
+    firstPayoutTx: string | null;
+    latestPayoutTx: string | null;
+    latestRevertTx: string | null;
+    payer: string;
+    examplePaidAmount: number | null;
+  };
 }
 
 export async function getRoomView(slug: string): Promise<RoomView | null> {
@@ -91,6 +97,9 @@ export async function getRoomView(slug: string): Promise<RoomView | null> {
 
   const confirmed = payouts.filter((p) => p.status === "confirmed");
   const reverted = payouts.filter((p) => p.status === "reverted");
+  const firstConfirmed = [...confirmed].sort(
+    (a, b) => (a.confirmedAt?.getTime() ?? a.createdAt.getTime()) - (b.confirmedAt?.getTime() ?? b.createdAt.getTime()),
+  )[0];
   const seeded = room.slug === SHOWCASE_SLUG;
   const capUsdc = room.permission ? fromMicroUsdc(room.permission.allowanceUsdc) : 0;
   const paidUsdc = confirmed.reduce((s, p) => s + fromMicroUsdc(p.amountUsdc), 0);
@@ -174,6 +183,12 @@ export async function getRoomView(slug: string): Promise<RoomView | null> {
     paidRows,
     refusedRows,
     totals: { paidUsdc, payoutCount: confirmed.length, refusalCount: refusals.length },
-    proof: { latestPayoutTx: confirmed[0]?.txHash ?? null, latestRevertTx: reverted[0]?.txHash ?? null, payer: PAYER, examplePaidAmount: confirmed[0] ? fromMicroUsdc(confirmed[0].amountUsdc) : null },
+    proof: {
+      firstPayoutTx: firstConfirmed?.txHash ?? null,
+      latestPayoutTx: confirmed[0]?.txHash ?? null,
+      latestRevertTx: reverted[0]?.txHash ?? null,
+      payer: PAYER,
+      examplePaidAmount: confirmed[0] ? fromMicroUsdc(confirmed[0].amountUsdc) : null,
+    },
   };
 }
