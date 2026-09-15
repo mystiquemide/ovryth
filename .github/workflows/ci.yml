@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  node:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --legacy-peer-deps
+      - run: npx tsc --noEmit
+      - run: npm run lint
+      # Integration tests hit Postgres and Base mainnet; provide secrets in repo settings.
+      - name: vitest
+        if: ${{ vars.CI_TESTS == '1' }}
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.DIRECT_URL }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_WEBHOOK_SECRET: ${{ secrets.TELEGRAM_WEBHOOK_SECRET }}
+          TICK_SECRET: ${{ secrets.TICK_SECRET }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          OVRYTH_OPERATOR_PRIVATE_KEY: ${{ secrets.OVRYTH_OPERATOR_PRIVATE_KEY }}
+          NEXT_PUBLIC_PAYER_ADDRESS: ${{ vars.NEXT_PUBLIC_PAYER_ADDRESS }}
+          PUBLIC_ORIGIN: https://ovryth.midelabs.xyz
+        run: npm test
+      - name: build
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.DIRECT_URL }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_WEBHOOK_SECRET: ${{ secrets.TELEGRAM_WEBHOOK_SECRET }}
+          TICK_SECRET: ${{ secrets.TICK_SECRET }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          OVRYTH_OPERATOR_PRIVATE_KEY: ${{ secrets.OVRYTH_OPERATOR_PRIVATE_KEY }}
+          NEXT_PUBLIC_PAYER_ADDRESS: ${{ vars.NEXT_PUBLIC_PAYER_ADDRESS }}
+          PUBLIC_ORIGIN: https://ovryth.midelabs.xyz
+        run: npm run build
+
+  contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # Fork tests require foundry v1.0.0: newer op-revm panics on post-Isthmus Base (operator fee scalar).
+      - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: v1.0.0
+      - name: forge test
+        working-directory: contracts
+        env:
+          BASE_RPC_URL: https://mainnet.base.org
+        run: forge test --fork-url $BASE_RPC_URL
