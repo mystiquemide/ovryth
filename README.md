@@ -1,6 +1,10 @@
-# Ovryth
+<h1 align="center">Ovryth</h1>
 
-<p align="left">
+<p align="center">
+  <strong>Autonomous AI payroll for token communities on Base.</strong>
+</p>
+
+<p align="center">
   <a href="https://github.com/mystiquemide/ovryth/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/mystiquemide/ovryth/actions/workflows/ci.yml/badge.svg" /></a>
   <a href="https://base.org"><img alt="Base Mainnet" src="https://img.shields.io/badge/Base-Mainnet-0052FF?style=flat-square&logo=coinbase&logoColor=white" /></a>
   <a href="https://basescan.org/address/0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"><img alt="USDC on Base" src="https://img.shields.io/badge/USDC-on%20Base-2775CA?style=flat-square" /></a>
@@ -12,25 +16,30 @@
   <a href="#license"><img alt="MIT License" src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" /></a>
 </p>
 
-**Autonomous AI payroll for token communities on Base.**
+<p align="center">
+  Built for the <strong>Orion Builder Hackathon</strong>
+</p>
+
+<p align="center">
+  <a href="https://ovryth.midelabs.xyz">Live app</a> ·
+  <a href="https://ovryth.midelabs.xyz/room">Live room</a> ·
+  <a href="https://ovryth.midelabs.xyz/proof">Proof</a> ·
+  <a href="https://ovryth.midelabs.xyz/api/proof">Agent proof</a> ·
+  <a href="https://ovryth.midelabs.xyz/docs">Docs</a> ·
+  <a href="https://ovryth.midelabs.xyz/status">Status</a>
+  <br />
+  <a href="https://t.me/ovryth_demo_room">Demo group</a> ·
+  <a href="https://t.me/Ovryth_bot">Telegram bot</a> ·
+  <a href="https://x.com/ovryth">X</a>
+</p>
 
 Ovryth lives inside a project's Telegram group. It reads contributions, filters obvious farming, classifies useful work against the project's rules, applies deterministic payout policy, and pays contributors in USDC from the project's Base Account under a revocable onchain spend-permission cap.
 
 No human signs each payout. The AI does not control the recipient wallet or the treasury. The project keeps custody of its funds, deterministic code bounds the model, and Coinbase's SpendPermissionManager enforces the real spending limit on Base.
 
-Built for the **Orion Builder Hackathon**.
-
-**Live app:** [ovryth.midelabs.xyz](https://ovryth.midelabs.xyz)  
-**Live room:** [ovryth.midelabs.xyz/room](https://ovryth.midelabs.xyz/room)  
-**Proof:** [ovryth.midelabs.xyz/proof](https://ovryth.midelabs.xyz/proof)  
-**Agent-readable proof:** [ovryth.midelabs.xyz/api/proof](https://ovryth.midelabs.xyz/api/proof)  
-**Docs:** [ovryth.midelabs.xyz/docs](https://ovryth.midelabs.xyz/docs)  
-**Status:** [ovryth.midelabs.xyz/status](https://ovryth.midelabs.xyz/status)  
-**Demo group:** [t.me/ovryth_demo_room](https://t.me/ovryth_demo_room)  
-**Telegram bot:** [@Ovryth_bot](https://t.me/Ovryth_bot)  
-**X:** [@ovryth](https://x.com/ovryth)
-
-![Ovryth weekly budget and payout proof](https://ovryth.midelabs.xyz/og.png)
+<p align="center">
+  <img alt="Ovryth weekly budget and payout proof" src="https://ovryth.midelabs.xyz/og.png" />
+</p>
 
 ## At a glance
 
