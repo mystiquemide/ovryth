@@ -45,6 +45,7 @@ export function ConsoleControls({
     const { createBaseAccountSDK } = await import("@base-org/account/browser");
     providerRef.current = createBaseAccountSDK({
       appName: "Ovryth",
+      appLogoUrl: `${window.location.origin}/apple-touch-icon.png`,
       // Route sponsorship through our own proxy so the CDP key stays server-side.
       paymasterUrls: { 8453: `${window.location.origin}/api/paymaster` },
     }).getProvider() as unknown as Provider;

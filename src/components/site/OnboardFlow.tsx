@@ -63,6 +63,7 @@ export function OnboardFlow() {
     const { createBaseAccountSDK } = await import("@base-org/account/browser");
     const sdk = createBaseAccountSDK({
       appName: "Ovryth",
+      appLogoUrl: `${window.location.origin}/apple-touch-icon.png`,
       // Route sponsorship through our own proxy so the CDP key stays server-side.
       paymasterUrls: { [CHAIN_ID]: `${window.location.origin}/api/paymaster` },
     });
