@@ -1,4 +1,5 @@
 import { Nav } from "@/components/site/Nav";
+import { MinimalFooter } from "@/components/site/MinimalFooter";
 import { getProofArtifacts } from "@/lib/proof";
 
 export const metadata = { title: "Proof · Ovryth" };
@@ -24,7 +25,7 @@ export default async function ProofPage() {
               <div>
                 {row.value ? (
                   row.href ? (
-                    <a href={row.href} target="_blank" rel="noreferrer" className="mono block break-all text-[13px] text-link hover:underline">
+                    <a href={row.href} target="_blank" rel="noreferrer" className="mono block break-all py-2 text-[13px] text-link hover:underline">
                       {row.value} ↗
                     </a>
                   ) : (
@@ -39,6 +40,7 @@ export default async function ProofPage() {
           ))}
         </div>
       </main>
+      <MinimalFooter />
     </>
   );
 }

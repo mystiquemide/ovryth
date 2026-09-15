@@ -35,7 +35,7 @@ export async function Hero() {
                 <span className="text-[15px] font-semibold text-ink">{showcase.name}</span>
                 <Pill>demo room</Pill>
               </div>
-              <a href="/room" className="text-[13px] text-link hover:underline">Open room →</a>
+              <a href="/room" className="inline-flex min-h-[36px] items-center text-[13px] text-link hover:underline">Open room →</a>
             </div>
 
             <BudgetBar

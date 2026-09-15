@@ -1,4 +1,5 @@
 import { Nav } from "@/components/site/Nav";
+import { MinimalFooter } from "@/components/site/MinimalFooter";
 
 export const metadata = { title: "Docs · Ovryth" };
 
@@ -54,6 +55,19 @@ export default function DocsPage() {
         <p className="eyebrow">Documentation</p>
         <h1 className="h1 mt-3">Ovryth docs</h1>
         <p className="body-lg mt-4 max-w-[640px] text-smoke">Everything needed to understand, use, and build on Ovryth: payroll for real community work, paid in USDC on Base.</p>
+
+        <div className="mt-8 flex flex-wrap gap-2">
+          {[
+            ["Earn in a room", "#getting-started"],
+            ["Create a room", "#getting-started"],
+            ["Inspect proof", "/proof"],
+            ["Use the API", "#api"],
+          ].map(([label, href]) => (
+            <a key={label} href={href} className="inline-flex min-h-[36px] items-center rounded-pill border border-mist bg-paper px-4 text-[13px] text-ink transition-colors hover:bg-snow">
+              {label}
+            </a>
+          ))}
+        </div>
 
         <div className="mt-12 grid gap-12 lg:grid-cols-[200px_1fr] lg:gap-16">
           <nav className="hidden lg:block">
@@ -141,6 +155,7 @@ export default function DocsPage() {
           </div>
         </div>
       </main>
+      <MinimalFooter />
     </>
   );
 }

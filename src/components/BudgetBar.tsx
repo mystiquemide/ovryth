@@ -78,7 +78,7 @@ export function BudgetBar({
 
         {/* Over-cap revert marker just past the cap */}
         {reverted && !revoked && (
-          <div className="absolute right-[-2px] top-[-18px] mono text-[11px] text-refused">reverted</div>
+          <div className="absolute right-[-2px] top-[-18px] mono text-[11px] text-refused">blocked by cap</div>
         )}
 
         {/* Refusal ticks under the bar (time axis: Monday to reset) */}

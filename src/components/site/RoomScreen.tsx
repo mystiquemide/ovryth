@@ -47,8 +47,8 @@ export function RoomScreen({ room }: { room: RoomView }) {
             <p className="mt-2 text-[13px] text-fog">Demo room. The transactions below are real Base receipts; demo participants are labeled.</p>
           )}
           {room.permission && (
-            <a href={baseScanAddress(room.permission.manager)} target="_blank" rel="noreferrer" className="mt-3 inline-block text-[13px] text-link hover:underline">
-              Verify the spend permission on BaseScan ↗
+            <a href={baseScanAddress(room.permission.manager)} target="_blank" rel="noreferrer" className="mt-3 inline-flex min-h-[36px] items-center text-[13px] text-link hover:underline">
+              Verify permission to spend up to the cap ↗
             </a>
           )}
 
@@ -61,7 +61,7 @@ export function RoomScreen({ room }: { room: RoomView }) {
               <StatLink label="Latest payout" value={shortHash(room.proof.latestPayoutTx)} href={baseScanTx(room.proof.latestPayoutTx)} />
             )}
             {room.proof.latestRevertTx && (
-              <StatLink label="Latest revert" value={shortHash(room.proof.latestRevertTx)} href={baseScanTx(room.proof.latestRevertTx)} />
+              <StatLink label="Latest reverted payment" value={shortHash(room.proof.latestRevertTx)} href={baseScanTx(room.proof.latestRevertTx)} />
             )}
           </dl>
         </header>
@@ -141,15 +141,15 @@ export function RoomScreen({ room }: { room: RoomView }) {
 
         <section className="py-10">
           <h2 className="h3 mb-4">Proof</h2>
-          <div className="flex flex-wrap gap-x-8 gap-y-3 text-[14px]">
+          <div className="flex flex-wrap gap-x-8 text-[14px]">
             {room.proof.latestPayoutTx && (
-              <a href={baseScanTx(room.proof.latestPayoutTx)} target="_blank" rel="noreferrer" className="mono text-link hover:underline">latest payout {shortHash(room.proof.latestPayoutTx)} ↗</a>
+              <a href={baseScanTx(room.proof.latestPayoutTx)} target="_blank" rel="noreferrer" className="mono inline-flex min-h-[36px] items-center text-link hover:underline">latest payout {shortHash(room.proof.latestPayoutTx)} ↗</a>
             )}
             {room.proof.latestRevertTx && (
-              <a href={baseScanTx(room.proof.latestRevertTx)} target="_blank" rel="noreferrer" className="mono text-link hover:underline">over-cap revert {shortHash(room.proof.latestRevertTx)} ↗</a>
+              <a href={baseScanTx(room.proof.latestRevertTx)} target="_blank" rel="noreferrer" className="mono inline-flex min-h-[36px] items-center text-link hover:underline">over-cap revert {shortHash(room.proof.latestRevertTx)} ↗</a>
             )}
-            <a href={`${baseScanAddress(room.proof.payer)}#code`} target="_blank" rel="noreferrer" className="text-link hover:underline">verified payer contract ↗</a>
-            <a href="/proof" className="text-link hover:underline">all proof →</a>
+            <a href={`${baseScanAddress(room.proof.payer)}#code`} target="_blank" rel="noreferrer" className="inline-flex min-h-[36px] items-center text-link hover:underline">verified payer contract ↗</a>
+            <a href="/proof" className="inline-flex min-h-[36px] items-center text-link hover:underline">all proof →</a>
           </div>
         </section>
       </main>
@@ -171,7 +171,7 @@ function StatLink({ label, value, href }: { label: string; value: string; href: 
     <div>
       <dt className="eyebrow text-fog">{label}</dt>
       <dd className="mono mt-0.5 text-[15px] font-medium">
-        <a href={href} target="_blank" rel="noreferrer" className="text-link hover:underline">{value} ↗</a>
+        <a href={href} target="_blank" rel="noreferrer" className="inline-flex min-h-[36px] items-center text-link hover:underline">{value} ↗</a>
       </dd>
     </div>
   );

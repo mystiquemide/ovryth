@@ -1,4 +1,5 @@
 import { Nav } from "@/components/site/Nav";
+import { MinimalFooter } from "@/components/site/MinimalFooter";
 import { getSystemStatus, type State } from "@/lib/status";
 
 export const metadata = { title: "Status · Ovryth" };
@@ -58,6 +59,7 @@ export default async function StatusPage() {
           operational.
         </p>
       </main>
+      <MinimalFooter />
     </>
   );
 }

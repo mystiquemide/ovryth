@@ -6,6 +6,8 @@ vi.mock("@/lib/telegram/api", () => ({
   sendMessage: vi.fn(async (chatId: unknown, text: string) => { sent.push({ chatId, text }); return null; }),
   baseScanTx: (h: string) => `https://basescan.org/tx/${h}`,
   tg: vi.fn(async () => ({})),
+  botUserId: vi.fn(async () => 999999999),
+  isChatAdmin: vi.fn(async () => true),
 }));
 
 import { prisma } from "../../src/lib/db";

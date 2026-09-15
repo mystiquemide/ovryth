@@ -14,9 +14,11 @@ const DESCRIPTION =
   "Your project keeps the budget in its own Base Account. Ovryth pays members who do real work in your Telegram within minutes, refuses duplicate and low-effort work in public, and can never spend past your weekly cap.";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://easily-synergy-canopener.ngrok-free.dev"),
+  metadataBase: new URL(process.env.PUBLIC_ORIGIN ?? process.env.NEXT_PUBLIC_SITE_URL ?? "https://ovryth.vercel.app"),
   title: "Ovryth · Payroll for real community work",
   description: DESCRIPTION,
+  alternates: { canonical: "/" },
+  icons: { apple: "/apple-touch-icon.png" },
   openGraph: {
     title: "Ovryth · Payroll for real community work",
     description: DESCRIPTION,

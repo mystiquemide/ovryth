@@ -49,7 +49,7 @@ export default function PrivacyPage() {
       </Section>
 
       <Section heading="Contact">
-        <p>Questions about this policy can be raised through the project&apos;s GitHub repository linked in the footer.</p>
+        <p>Questions about this policy can be raised with the project team via the Ovryth account on X, linked in the footer.</p>
       </Section>
     </LegalLayout>
   );

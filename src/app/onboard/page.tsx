@@ -1,4 +1,5 @@
 import { Nav } from "@/components/site/Nav";
+import { MinimalFooter } from "@/components/site/MinimalFooter";
 import { ButtonLink } from "@/components/ui/Button";
 
 export const metadata = { title: "Onboard · Ovryth" };
@@ -112,6 +113,7 @@ export default function OnboardPage() {
           </p>
         </section>
       </main>
+      <MinimalFooter />
     </>
   );
 }
