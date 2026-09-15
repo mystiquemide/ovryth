@@ -47,7 +47,9 @@ export interface RoomView {
     nextReset: string;
     endDate: string;
     status: "active" | "revoked" | "expired" | "pending";
+    sdkPermission: unknown; // raw permissionJson for requestRevoke (public on-chain data)
   } | null;
+  revokedTxHash: string | null;
   rules: {
     version: number;
     categories: Category[];
@@ -153,8 +155,10 @@ export async function getRoomView(slug: string): Promise<RoomView | null> {
           nextReset: nextMondayUtcLabel(),
           endDate: room.permission.end >= END_SENTINEL ? "open-ended" : new Date(Number(room.permission.end) * 1000).toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" }),
           status: statusMap[room.status] ?? "pending",
+          sdkPermission: room.permission.permissionJson,
         }
       : null,
+    revokedTxHash: room.revokedTxHash ?? null,
     rules: rv
       ? {
           version: rv.version,

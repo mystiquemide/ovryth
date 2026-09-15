@@ -6,6 +6,7 @@ import { PermissionCard } from "@/components/PermissionCard";
 import { RulesPanel } from "@/components/RulesPanel";
 import { RoomLedgerTabs } from "@/components/RoomLedgerTabs";
 import { ConsoleControls } from "@/components/site/ConsoleControls";
+import { RevokePermission } from "@/components/site/RevokePermission";
 import { VerdictPill, type VerdictKind } from "@/components/ui/Pill";
 import { AddressDisplay } from "@/components/ui/AddressDisplay";
 import { formatUsdcAmount } from "@/lib/format";
@@ -113,13 +114,22 @@ export function ConsoleScreen({ room, notes, publicHref }: { room: RoomView; not
             </div>
           </div>
 
-          <details className="rounded-card border border-mist bg-paper p-6 text-[13px] text-smoke">
+          <details className="rounded-card border border-mist bg-paper p-6 text-[13px] text-smoke" open={room.status === "revoked"}>
             <summary className="cursor-pointer text-[15px] font-semibold text-ink">Revoke this room</summary>
             <p className="mt-3 leading-relaxed">
-              Revoke the spend permission from your Base Account&apos;s permissions screen. It sends one on-chain
-              transaction. Ovryth stops immediately and can no longer move any funds. This room then shows as revoked.
+              One on-chain transaction from the room&apos;s Base Account. Ovryth stops immediately and can no
+              longer move any funds. This room then shows as revoked.
             </p>
             <p className="mono mt-3 text-[12px] text-fog">weekly cap {formatUsdcAmount(room.budget.capUsdc)} USDC</p>
+            {room.permission && (
+              <RevokePermission
+                slug={room.slug}
+                ownerAccount={room.permission.account}
+                sdkPermission={room.permission.sdkPermission as never}
+                revoked={room.status === "revoked"}
+                revokedTxHash={room.revokedTxHash}
+              />
+            )}
           </details>
         </aside>
       </div>

@@ -57,6 +57,7 @@ model Room {
   ownerAccount   String // Base Account address
   status         RoomStatus @default(pending_onchain)
   external       Boolean    @default(false)
+  revokedTxHash  String? // revoke tx recorded via the owner console
   createdAt      DateTime   @default(now())
 
   permission     Permission?

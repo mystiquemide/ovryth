@@ -16,11 +16,15 @@ export interface ProofRow {
 
 export async function getProofArtifacts(): Promise<ProofRow[]> {
   const room = await getRoomView(SHOWCASE_SLUG);
-  const lastStatus = await prisma.permission.aggregate({ _max: { lastStatusAt: true } });
+  const [lastStatus, revokedRoom] = await Promise.all([
+    prisma.permission.aggregate({ _max: { lastStatusAt: true } }),
+    prisma.room.findFirst({ where: { revokedTxHash: { not: null } }, orderBy: { createdAt: "desc" }, select: { revokedTxHash: true } }),
+  ]);
   const lastTick = lastStatus._max.lastStatusAt;
 
   const payoutTx = room?.proof.latestPayoutTx ?? null;
   const revertTx = room?.proof.latestRevertTx ?? null;
+  const revokeTx = revokedRoom?.revokedTxHash ?? null;
 
   return [
     {
@@ -47,9 +51,11 @@ export async function getProofArtifacts(): Promise<ProofRow[]> {
     {
       label: "Revoke",
       kind: "tx",
-      value: null,
-      href: null,
-      note: "No revoke yet. Revoking is one on-chain transaction from the project's account; Ovryth stops immediately and can no longer move funds.",
+      value: revokeTx,
+      href: revokeTx ? baseScanTx(revokeTx) : null,
+      note: revokeTx
+        ? "The project's account revoked the spend permission in one transaction. Ovryth stopped immediately and can no longer move funds."
+        : "No revoke yet. Revoking is one on-chain transaction from the project's account; Ovryth stops immediately and can no longer move funds.",
     },
     {
       label: "Payer contract (verified)",
