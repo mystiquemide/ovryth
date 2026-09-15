@@ -3,7 +3,7 @@ import { getRoomView, SHOWCASE_SLUG } from "./room-view";
 import { baseScanTx, baseScanAddress } from "./format";
 
 // Real Base mainnet artifacts. Approval lands inside the first payout (approve-in-pay),
-// so the approval row links the first confirmed payout once one exists.
+// so the approval row links the earliest confirmed payout, not whichever payout is latest.
 const PAYER = process.env.NEXT_PUBLIC_PAYER_ADDRESS ?? "0x485457f86fbf5e2385ae183bd5518c7d965e3999";
 
 export interface ProofRow {
@@ -22,6 +22,7 @@ export async function getProofArtifacts(): Promise<ProofRow[]> {
   ]);
   const lastTick = lastStatus._max.lastStatusAt;
 
+  const approvalTx = room?.proof.firstPayoutTx ?? null;
   const payoutTx = room?.proof.latestPayoutTx ?? null;
   const revertTx = room?.proof.latestRevertTx ?? null;
   const revokeTx = revokedRoom?.revokedTxHash ?? null;
@@ -30,8 +31,8 @@ export async function getProofArtifacts(): Promise<ProofRow[]> {
     {
       label: "Permission approval",
       kind: "tx",
-      value: payoutTx,
-      href: payoutTx ? baseScanTx(payoutTx) : null,
+      value: approvalTx,
+      href: approvalTx ? baseScanTx(approvalTx) : null,
       note: "The project's Base Account signed a weekly spend permission naming the payer as the only spender. Registration happens inside the first payout transaction, not as a separate step.",
     },
     {
