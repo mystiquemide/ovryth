@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { appendFileSync } from "node:fs";
+import { clientIp, httpError } from "@/lib/http";
+import { rateLimit } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -20,24 +21,22 @@ const ALLOWED = new Set([
 ]);
 
 export async function POST(req: Request) {
+  const limit = rateLimit(`paymaster:${clientIp(req)}`, 60, 60 * 1000);
+  if (!limit.ok) return httpError(429, "rate limit exceeded", { resetAt: limit.resetAt });
+
   const url = process.env.CDP_PAYMASTER_URL;
-  if (!url) return NextResponse.json({ error: "paymaster not configured" }, { status: 503 });
+  if (!url) return httpError(503, "paymaster not configured");
 
   let body: { method?: string } | unknown;
   try {
     body = await req.json();
   } catch {
-    return NextResponse.json({ error: "invalid json" }, { status: 400 });
+    return httpError(400, "invalid json");
   }
 
   const method = (body as { method?: string }).method;
-  try {
-    appendFileSync("/tmp/paymaster-hits.log", `${new Date().toISOString()} ${method}\n`);
-  } catch {
-    /* best-effort debug log */
-  }
   if (typeof method !== "string" || !ALLOWED.has(method)) {
-    return NextResponse.json({ error: "method not allowed" }, { status: 403 });
+    return httpError(403, "method not allowed");
   }
 
   try {
@@ -49,6 +48,6 @@ export async function POST(req: Request) {
     const json = await upstream.json();
     return NextResponse.json(json, { status: upstream.status });
   } catch (e) {
-    return NextResponse.json({ error: e instanceof Error ? e.message.slice(0, 120) : "upstream error" }, { status: 502 });
+    return httpError(502, e instanceof Error ? e.message.slice(0, 120) : "upstream error");
   }
 }

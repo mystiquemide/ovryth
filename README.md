@@ -8,6 +8,12 @@ Built for the Orion Builder Hackathon (AI agents).
 
 ![The weekly budget bar](https://ovryth.midelabs.xyz/og.png)
 
+## The problem
+
+Token communities run on volunteer work: support answers, translations, guides, moderation. Paying for it today means a community manager hand-sending tips off a spreadsheet, or a quest platform that holds the budget on its own rails. The first is unpaid labor for the manager, the second means trusting a platform with the project's treasury, and both get farmed by copy-paste spam the moment money shows up.
+
+Ovryth is the alternative: an AI agent inside the group that decides what counts as real work and pays it, while the budget stays in the project's own Base Account under an on-chain cap the agent cannot cross.
+
 ## Try it in two minutes
 
 1. Join the demo group: [t.me/ovryth_demo_room](https://t.me/ovryth_demo_room). The agent is an admin there.
@@ -30,6 +36,17 @@ Project Base Account  →  SpendPermissionManager  →  OvrythPayer  →  Member
 ```
 
 A payout is one transaction from the project's account to the member. The first payout registers the signed permission (`approveWithSignature`), spends within the weekly cap, then transfers to the member — see [`0x9d44d136…392270`](https://basescan.org/tx/0x9d44d136f7ab6e6988c8f5e17a2d2c5a0b2a744f7d96b12267fb082239392270). The payer contract has no withdraw function and no arbitrary call; it can only run `pay()` against a permission that names it as spender.
+
+## Why Base
+
+Every piece of the money path is a named, load-bearing integration:
+
+- **Base Account (Coinbase Smart Wallet)** holds the project budget. Funds stay in the project's own account; nothing ever rests in an Ovryth wallet or contract. The account is also the owner identity for the console — pause and rules changes are signature-verified ERC-1271 messages from it.
+- **Spend Permissions + SpendPermissionManager** are the agent's leash. The project signs a weekly USDC allowance naming the payer contract as the only spender. The cap, the period, and revocation are enforced by Coinbase's manager contract on chain, not by Ovryth's code.
+- **OvrythPayer** is a minimal verified contract that can only run `pay()`: register the permission if needed, spend within the cap, forward the exact amount to the member. One transaction, nothing in between.
+- **CDP Paymaster** sponsors the owner's smart-account calls (including the one-signature revoke) through `/api/paymaster`, a server-side proxy that allowlists JSON-RPC methods so the CDP client key never reaches the browser. Payout gas is operator-funded, so the project never needs ETH.
+- **Telegram Bot API** is the agent's surface: it reads contributions in the group, replies with verdicts in-thread, and links member wallets by DM.
+- **Gemini / Groq** classify each message behind one zod schema; a deterministic policy layer clamps the model's proposal and can only lower it, never raise it.
 
 ## Proof
 

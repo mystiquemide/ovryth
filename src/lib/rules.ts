@@ -35,7 +35,7 @@ export const DEFAULT_CATEGORIES = [
 
 /**
  * Build a complete rules v1 from optional owner input. Room daily cap defaults to 30% of the
- * weekly allowance (PRD) so a judging-week rush cannot drain the week in an hour.
+ * weekly allowance so a burst of contributions cannot drain the week in an hour.
  */
 export function buildRulesV1(allowanceMicroUsdc: bigint, input?: Partial<RulesInput>): RulesInput {
   const defaultDaily = fromMicroUsdc((allowanceMicroUsdc * 30n) / 100n);

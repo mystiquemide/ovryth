@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/db";
+import { rateLimit } from "@/lib/rate-limit";
 import { contentHash, simhash, approxAccountAgeDaysFromUserId } from "@/lib/engine/prefilter";
 import { REASON, type ReasonCode } from "@/lib/engine/types";
 import { runEngineForMessage } from "@/lib/engine/run";
@@ -133,6 +134,10 @@ async function handleQuestion(msg: TgMessage, text: string): Promise<void> {
 async function handleContribution(msg: TgMessage, text: string): Promise<void> {
   const room = await roomForChat(msg.chat.id);
   if (!room || (room.status !== "active" && room.status !== "pending_onchain")) return;
+
+  // Per-chat flood cap: silently drop over-limit messages so a spam burst cannot
+  // burn model calls. 60/min matches the documented limit.
+  if (!rateLimit(`tg:${msg.chat.id}`, 60, 60 * 1000).ok) return;
 
   const from = msg.from!;
   const member = await prisma.member.upsert({

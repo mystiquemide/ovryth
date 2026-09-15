@@ -1,6 +1,6 @@
 # Ovryth Design
 
-Version 1.1, 2026-09-14. Applies docs/WIN-PLAN.md section 9. Editorial light, but not Tarsique's twin: Ovryth is built around one object, the weekly budget bar, which is the first screenshot, the OG image, and the thing a judge remembers. The product is about money moving for work, so the visual language is a ledger: hairlines, tabular numerals, verdict colours that always come with a word, no decoration, no serif.
+Version 1.2, 2026-09-15. Editorial light. Ovryth is built around one object, the weekly budget bar, which is the first screenshot, the OG image, and the thing a viewer remembers. The product is about money moving for work, so the visual language is a ledger: hairlines, tabular numerals, verdict colours that always come with a word, no decoration, no serif.
 
 Banned words anywhere in the UI: tip, reward, engagement, incentive, gamify, success, AI-powered. Use paid, refused, held, budget, rules, work.
 
@@ -12,7 +12,7 @@ Canvas and text
 - All text on canvas meets AA. Green and rust are never the only signal; every verdict also has a glyph and a word.
 
 Typography
-- Inter 400/500 for UI (load only these weights, never synthesize bold). No serif anywhere.
+- Open Runde 400/500/600 for UI (loaded via @fontsource, never synthesized). No serif anywhere.
 - Geist Mono for amounts, addresses, hashes, timestamps, reason codes. Tabular numerals on.
 - Scale: 13 mono captions, 14 body small, 16 body, 20 h3, 28 h2, 44 h1 desktop / 32 mobile. Line height 1.5 body, 1.15 headings.
 
@@ -40,17 +40,17 @@ Pill: mono 13, hairline border, tinted by kind (paid, refused, hold, revoked, in
 
 VerdictRow: the core ledger row. Grid on md: [time mono 13] [member @handle] [category pill] [amount mono, right aligned, green for paid, dash for refusal] [reason text] [tx link glyph]. Stacks on mobile with amount first. Hover reveals the full reason.
 
-PermissionCard: account (truncated 0xAb…43e9 with copy), spender (payer contract, linked), allowance per week, remaining this period as a horizontal bar with mono figures, next reset, end date, status pill, BaseScan link to the manager, revoke instructions in a details element.
+PermissionCard: account (truncated 0xAb…43e9 with copy), spender (payer contract, linked), allowance per week, remaining this period as a horizontal bar with mono figures, next reset, end date, status pill, BaseScan link to the manager.
 
 RulesPanel: category table (label, pay range), floors line, owner free text in a quote block, version and effective time in mono.
 
 StatusBanner: full-width hairline box for paused, revoked, expired, pending_onchain, wrong network. Word plus glyph plus one sentence plus the relevant link.
 
-WalletConnect: disconnected (button "Connect Base Account"), connecting (spinner), connected (address pill with copy). If the connected wallet is not a Base Account smart wallet: banner "Spend permissions need a Base Account" with link.
+WalletConnect: disconnected (button "Connect Base Account"), connecting (spinner), connected (address pill with copy). If the connected wallet is not a Base Account smart wallet: banner "Spend permissions need a Base Account" with link. When the connected account is not the room owner: banner names the expected owner address.
 
 WrongNetworkBanner: shown when chain is not 8453 with a "Switch to Base" button.
 
-TxState: inline, not modal: idle, awaiting signature, pending (hash shown as soon as known), confirmed (block, link), failed (reason, retry).
+TxState: inline, not modal: idle, awaiting signature, pending (hash shown as soon as known), confirmed (block, link), failed (friendly reason, retry). Raw wallet and SDK errors never render verbatim; they map through the shared `friendlyError` helper.
 
 EmptyState: one sentence plus one action. Room with no payouts yet: "No payouts yet this week. Rules are live. First real contribution gets paid." Not connected: "Connect the project's Base Account to begin."
 
@@ -61,13 +61,13 @@ AmountDisplay: mono, 2 decimals, "USDC" suffix in muted, right aligned in tables
 ## 3. Screens
 
 ### Landing `/`
-1. Header: mark + "Ovryth", nav (Demo room, Proof, GitHub, X), "Open a room" primary.
-2. Hero: H1 (Inter 500, 44) "Payroll for real community work." Sub: "Your project keeps the budget in its own Base Account. Ovryth pays members who do real work within minutes, refuses farmers in public, and can never spend past your weekly cap." Below the sub, full width: the showcase room's live BudgetBar. Under it, the last three VerdictRows (one refusal among them if available).
-3. Get paid in two minutes: the judge path as five numbered steps with the demo group link, the `/wallet` command, the three pinned questions, and the expected reply. This block sits above everything else about the product because it is the thing a judge will do.
-4. Custody: one diagram row with real addresses: Project account -> SpendPermissionManager 0xf852…67Ad -> OvrythPayer <addr> -> Member, caption "one transaction, nothing rests in between", one real tx hash traced, link to the verified payer contract. Under it, three sentences on what Ovryth deliberately does not do (no treasury wallet, no leaderboard or XP, no moderation) and why.
-5. Comparison: the PRD table (Ovryth, Valor, Zealy AI review) rendered plainly, dated.
+1. Header: mark + "Ovryth", nav (Demo room, Proof, Docs, GitHub, X), "Open a room" primary.
+2. Hero: H1 (Open Runde 500, 44) "An agent that pays for real work. Never past your cap." Sub explaining the agent reads, decides, and pays within the on-chain cap. Below the sub, full width: the showcase room's live BudgetBar. Under it, the last three VerdictRows (one refusal among them if available) and the real pinned questions from the demo room.
+3. Get paid in two minutes: five numbered steps with the demo group link, the `/wallet` command, and the expected reply. This block sits above everything else about the product because it is the fastest way to see it work.
+4. Custody: one diagram row with real addresses: Project account -> SpendPermissionManager 0xf852…67Ad -> OvrythPayer -> Member, caption "one transaction, nothing rests in between", one real tx hash traced, link to the verified payer contract. Under it, three sentences on what Ovryth deliberately does not do (no treasury wallet, no leaderboard or XP, no moderation) and why.
+5. Comparison: the table (Ovryth, Valor, Zealy AI review) rendered plainly, dated.
 6. External room: the owner's room BudgetBar, their account address, one quote with permission.
-7. Footer: links, chain id 8453 stated, honesty notes (seeded accounts labelled, account age approximated, EOAs unsupported).
+7. Footer: links, chain id 8453 stated, honesty notes (demo accounts labelled, account age approximated, EOAs unsupported).
 
 No statistics rail, no three-column "how it works", no marketing section.
 
@@ -80,43 +80,43 @@ Stepper, one column, 560px.
 5. Done: room slug, public page link, console link, what happens next.
 
 ### Console `/console/[slug]`
-Header with room name and status pill. BudgetBar full width. Left: PermissionCard, pause toggle (signature required), revoke instructions. Right: RulesPanel in edit mode showing the current version number and effective time (no history list). Below: this week's ledger (VerdictRows), operator notes (last tick, pending jobs, operator gas).
+Header with room name and status pill. BudgetBar full width. Left: PermissionCard, pause toggle (signature required), in-console revoke button (one signature via the paymaster-sponsored wallet call, verified on chain before the room flips). Right: RulesPanel in edit mode showing the current version number and effective time (no history list). Below: this week's ledger (VerdictRows), operator notes (last tick, pending jobs, operator gas).
 
-### Room page `/r/[slug]` (judge surface, hackathon demo link)
-1. Header: room name, token, status pill, "seeded room" or "external room, owner 0x…" label, "Verify on BaseScan" link to the manager.
-2. Get paid in two minutes: the five steps (join, `/wallet 0x…`, answer a pinned question, paid reply with tx, optional copy from a second account gets refused), the three pinned questions listed, expected reply shown as a real example row.
+### Room page `/r/[slug]`
+1. Header: room name, token, status pill, "demo room" or "external room, owner 0x…" label, "Verify on BaseScan" link to the manager.
+2. Get paid in two minutes: the five steps (join, `/wallet 0x…`, answer a pinned question, paid reply with tx, optional copy from a second account gets refused), the pinned questions listed, expected reply shown as a real example row.
 3. BudgetBar.
 4. PermissionCard.
-5. This week: two tabs, Paid and Refused, each a VerdictRow list. Paid rows link to tx and show "edited after payment" where applicable. Refused rows show reason and no amount. Seeded accounts carry a "seeded" pill.
+5. This week: two tabs, Paid and Refused, each a VerdictRow list. Paid rows link to tx and show "edited after payment" where applicable. Refused rows show reason and no amount. Demo accounts carry a label.
 6. RulesPanel (read mode).
 7. Proof strip: latest payout tx, latest over-cap revert tx (if any), latest revoke (if any), latest status check time, payer contract link, link to /proof.
 8. All time totals in mono.
 OG image: the BudgetBar with room name and figures.
 
 ### Proof page `/proof`
-Six rows, each: label, hash or address (mono, break-all), block, BaseScan link, one sentence on what it proves. Rows: permission approval, payout to a wallet we do not control (external room), over-cap revert, revoke, OvrythPayer verified source, last sweeper tick. No prose above the table beyond one line.
+Six rows, each: label, hash or address (mono, break-all), block, BaseScan link, one sentence on what it proves. Rows: permission approval, capped payout, over-cap revert, revoke, OvrythPayer verified source, last sweeper tick. Revalidates every 60 seconds so newly recorded artifacts appear without a redeploy. `GET /api/proof` returns the same rows as JSON. No prose above the table beyond one line.
 
 ### Telegram surfaces
 - In-thread paid reply: "Paid 2.50 USDC for translation. Reason: full FAQ translated to PT-BR. tx 0x1a2b…9c (BaseScan link)". One line, no emoji.
 - In-thread refusal: "Not paid: copy of an earlier message." Reason set fixed: duplicate, off-topic, no substance, boilerplate, account too new, tenure too short, weekly cap reached, no linked wallet (with DM prompt).
-- Budget reached: "Weekly budget reached. Resets <day time UTC>."
+- Budget reached: "This room's weekly budget is spent. The cap resets every 7 days."
 - DM: /wallet 0x… (validates, confirms), /rules (link to the room page). No /history.
 - Pinned question format in the demo room: "#question What does the OvrythPayer contract prevent, and how would you check it on BaseScan?" Three of these, pinned.
 
-The memorable screenshot: a Telegram thread showing a member's answer, the bot's "Paid 2.50 USDC…" reply with the tx link, and directly under it a second member's copy with "Not paid: copy of an earlier message." This image goes in the README, the first X post after production, and the video thumbnail alternates with the BudgetBar.
+The memorable screenshot: a Telegram thread showing a member's answer, the bot's "Paid 2.50 USDC…" reply with the tx link, and directly under it a second member's copy with "Not paid: copy of an earlier message." This image belongs in the README and the demo video.
 
 ## 4. User flows
 
 Owner: landing -> Open a room -> connect -> add bot, /link -> allowance, sign -> rules -> room live -> console.
 Contributor: sees a paid reply in the group -> DMs /wallet -> posts work -> paid reply with tx.
-Judge: demo link lands on the room page -> reads the five steps -> joins the group -> DMs /wallet -> answers a pinned question -> paid reply with tx within minutes -> opens BaseScan, sees the transfer from the project account -> optionally copies the answer from another account, refused -> back on the page, sees both rows and the bar segment -> /proof.
+Observer: demo link lands on the room page -> reads the five steps -> joins the group -> DMs /wallet -> answers a pinned question -> paid reply with tx within minutes -> opens BaseScan, sees the transfer from the project account -> optionally copies the answer from another account, refused -> back on the page, sees both rows and the bar segment -> /proof.
 
 ## 5. Responsive rules
 
 - Mobile first. Container padding 16 under 640, 24 to 1024, rails only from 1100.
 - VerdictRow stacks under md: amount and verdict first line, member and category second, reason third, tx link last.
 - PermissionCard: bar full width, figures wrap to two lines under 480.
-- Every address and hash uses `break-all` inside mono spans; no horizontal overflow at 360 (asserted in E2E as in Tarsique).
+- Every address and hash uses `break-all` inside mono spans; no horizontal overflow at 360.
 - Tables become stacked definition lists under 640.
 
 ## 6. Accessibility

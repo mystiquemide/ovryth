@@ -1,7 +1,7 @@
 /**
  * npm run db:smoke
  * Verifies the database + Prisma adapter by inserting and reading back a Room, then
- * cleaning it up. Requires a real DATABASE_URL (Supabase pooler) with migrations applied.
+ * cleaning it up. Requires a real DATABASE_URL (Neon pooler) with migrations applied.
  */
 import { config } from "dotenv";
 config({ path: ".env.local" });

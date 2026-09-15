@@ -6,7 +6,7 @@ import { z } from "zod";
  * Ovryth LLM seam. The model classifies and explains; the policy layer decides; the chain enforces.
  * The zod schema is the single source of truth: it is converted to JSON Schema for the provider
  * and then used to validate the response. Nothing unvalidated leaves this function.
- * Gemini flash primary (thinking off), Groq fallback. Same pattern proven in Tarsique.
+ * Gemini flash primary (thinking off), Groq fallback.
  */
 
 export const MODELS = {
