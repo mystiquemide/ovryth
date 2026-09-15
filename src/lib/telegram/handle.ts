@@ -172,14 +172,14 @@ async function handleContribution(msg: TgMessage, text: string): Promise<void> {
     if (res.status === "confirmed" && res.txHash) {
       await sendMessage(msg.chat.id, `Paid ${d.amountUsdc} USDC for ${d.categoryKey ?? "work"}. Reason: ${d.reasonText}. tx ${baseScanTx(res.txHash)}`, { replyToMessageId: msg.message_id });
     } else if (res.status === "reverted") {
-      await sendMessage(msg.chat.id, "Weekly budget reached.", { replyToMessageId: msg.message_id });
+      await sendMessage(msg.chat.id, "This room's weekly budget is spent. The cap resets every 7 days.", { replyToMessageId: msg.message_id });
     }
     return;
   }
 
   if (d.hold) {
     await prisma.hold.create({ data: { decisionId, memberId: member.id, amountUsdc: BigInt(Math.round(d.amountUsdc * 1_000_000)), expiresAt: new Date(Date.now() + HOLD_MS) } });
-    await sendMessage(msg.chat.id, "Approved. DM me your Base wallet to get paid; the amount is held for 72 hours.", { replyToMessageId: msg.message_id });
+    await sendMessage(msg.chat.id, "Approved. DM me your Base wallet to get paid. The amount is held for 72 hours.", { replyToMessageId: msg.message_id });
     return;
   }
 

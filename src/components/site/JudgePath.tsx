@@ -3,6 +3,7 @@ import { getShowcase } from "@/lib/showcase";
 import { SHOWCASE_SLUG } from "@/lib/room-view";
 
 const BOT_URL = "https://t.me/Ovryth_bot";
+const GROUP_URL = "https://t.me/ovryth_demo_room";
 
 const STEPS = [
   { n: "1", title: "Join the room's Telegram group", body: "The Ovryth agent is an admin there, reading every message and paying for real work." },
@@ -33,7 +34,13 @@ export async function JudgePath() {
                   {s.n}
                 </span>
                 <div>
-                  <h3 className="text-[17px] font-semibold text-ink">{s.title}</h3>
+                  <h3 className="text-[17px] font-semibold text-ink">
+                    {s.n === "1" ? (
+                      <a href={GROUP_URL} target="_blank" rel="noreferrer" className="text-link hover:underline">
+                        {s.title} ↗
+                      </a>
+                    ) : s.title}
+                  </h3>
                   <p className="mt-1 text-[15px] leading-relaxed text-smoke">{s.body}</p>
                 </div>
               </li>

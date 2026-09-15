@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { getAddress, toHex } from "viem";
 import { Button } from "@/components/ui/Button";
 import { StatusBanner } from "@/components/ui/StatusBanner";
+import { friendlyError } from "@/lib/ui-error";
 import { AddressDisplay } from "@/components/ui/AddressDisplay";
 
 type Provider = { request: (a: { method: string; params?: unknown[] }) => Promise<unknown> };
@@ -60,7 +61,7 @@ export function ConsoleControls({
       const accounts = (await provider.request({ method: "eth_requestAccounts" })) as string[];
       setAccount(getAddress(accounts[0]));
     } catch (e) {
-      setError(msg(e));
+      setError(friendlyError(e));
     } finally {
       setBusy(false);
     }
@@ -101,7 +102,7 @@ export function ConsoleControls({
       setRoomStatus(json.status);
       setNotice(json.status === "paused" ? "Room paused." : "Room resumed.");
     } catch (e) {
-      setError(msg(e));
+      setError(friendlyError(e));
     } finally {
       setBusy(false);
     }
@@ -123,7 +124,7 @@ export function ConsoleControls({
       setVersion(json.version);
       setNotice(`Rules saved as v${json.version}.`);
     } catch (e) {
-      setError(msg(e));
+      setError(friendlyError(e));
     } finally {
       setBusy(false);
     }
@@ -193,7 +194,3 @@ export function ConsoleControls({
 
 const inputCls = "mb-4 w-full rounded-[10px] border border-mist bg-paper px-3.5 py-2.5 text-[15px] text-ink outline-none focus:border-electric focus:ring-2 focus:ring-electric/30";
 
-function msg(e: unknown): string {
-  if (e && typeof e === "object" && "message" in e) return String((e as { message: unknown }).message).slice(0, 200);
-  return String(e).slice(0, 200);
-}

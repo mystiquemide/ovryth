@@ -5,6 +5,7 @@ import { getAddress } from "viem";
 import { Button } from "@/components/ui/Button";
 import { StatusBanner } from "@/components/ui/StatusBanner";
 import { baseScanTx } from "@/lib/format";
+import { friendlyError } from "@/lib/ui-error";
 
 type Provider = { request: (a: { method: string; params?: unknown[] }) => Promise<unknown> };
 
@@ -81,7 +82,7 @@ export function RevokePermission({
       setDoneHash(hash || null);
       setIsRevoked(true);
     } catch (e) {
-      setError(msg(e));
+      setError(friendlyError(e));
     } finally {
       setBusy(false);
     }
@@ -114,7 +115,3 @@ export function RevokePermission({
   );
 }
 
-function msg(e: unknown): string {
-  if (e && typeof e === "object" && "message" in e) return String((e as { message: unknown }).message).slice(0, 200);
-  return String(e).slice(0, 200);
-}

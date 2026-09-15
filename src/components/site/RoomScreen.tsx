@@ -10,6 +10,7 @@ import { formatUsdcAmount, baseScanTx, baseScanAddress, shortHash } from "@/lib/
 import type { RoomView } from "@/lib/room-view";
 
 const BOT_URL = "https://t.me/Ovryth_bot";
+const GROUP_URL = "https://t.me/ovryth_demo_room";
 
 const STATUS: Record<string, { kind: VerdictKind; word: string }> = {
   active: { kind: "paid", word: "active" },
@@ -81,7 +82,10 @@ export function RoomScreen({ room }: { room: RoomView }) {
               ))}
               <li className="flex gap-4">
                 <span className="h-8 w-8 shrink-0" />
-                <a href={BOT_URL} target="_blank" rel="noreferrer" className="inline-flex items-center rounded-pill bg-midnight px-[18px] py-[11px] text-[14px] font-medium text-white shadow-[var(--shadow-button)] transition-colors hover:bg-carbon">Open @Ovryth_bot →</a>
+                <div className="flex flex-wrap gap-3">
+                  <a href={GROUP_URL} target="_blank" rel="noreferrer" className="inline-flex min-h-[44px] items-center rounded-pill border border-mist bg-paper px-[18px] py-[11px] text-[14px] font-medium text-ink transition-colors hover:bg-snow">Join the Telegram group →</a>
+                  <a href={BOT_URL} target="_blank" rel="noreferrer" className="inline-flex min-h-[44px] items-center rounded-pill bg-midnight px-[18px] py-[11px] text-[14px] font-medium text-white shadow-[var(--shadow-button)] transition-colors hover:bg-carbon">Open @Ovryth_bot →</a>
+                </div>
               </li>
             </ol>
             <div className="space-y-6">

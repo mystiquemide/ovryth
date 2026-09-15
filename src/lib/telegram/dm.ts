@@ -26,7 +26,7 @@ export async function handleDm(msg: TgMessage): Promise<void> {
       const members = await prisma.member.findMany({ where: { telegramUserId: userId }, include: { room: true } });
       const active = members.filter((m) => m.room.status !== "revoked");
       if (active.length === 0) {
-        await sendMessage(msg.chat.id, "Link a wallet with /wallet 0x…, then do real work in a room where Ovryth is active.");
+        await sendMessage(msg.chat.id, `You're not in any active room yet. Link a wallet with /wallet 0x…, then do real work in a room where the agent is active. Live room: ${ORIGIN}/room`);
         return;
       }
       const lines = active.map((m) => `• ${m.room.name}: ${ORIGIN}/r/${m.room.slug}`);

@@ -7,6 +7,7 @@ import { StatusBanner } from "@/components/ui/StatusBanner";
 import { AddressDisplay } from "@/components/ui/AddressDisplay";
 import { computePermissionHash, type SpendPermission } from "@/lib/chain/permission";
 import { PAYER_ADDRESS, USDC, CHAIN_ID } from "@/lib/chain/config";
+import { friendlyError } from "@/lib/ui-error";
 
 type Step = "connect" | "budget" | "rules" | "link" | "done";
 type Provider = { request: (a: { method: string; params?: unknown[] }) => Promise<unknown> };
@@ -82,7 +83,7 @@ export function OnboardFlow() {
       setWrongNetwork(chainId !== BASE_HEX);
       setStep("budget");
     } catch (e) {
-      setError(errMsg(e));
+      setError(friendlyError(e));
     } finally {
       setBusy(false);
     }
@@ -94,7 +95,7 @@ export function OnboardFlow() {
       await provider.request({ method: "wallet_switchEthereumChain", params: [{ chainId: BASE_HEX }] });
       setWrongNetwork(false);
     } catch (e) {
-      setError(errMsg(e));
+      setError(friendlyError(e));
     }
   }
 
@@ -123,7 +124,7 @@ export function OnboardFlow() {
       setPermission(await requestPermission(provider, account, allowance));
       setStep("rules");
     } catch (e) {
-      setError(errMsg(e));
+      setError(friendlyError(e));
     } finally {
       setBusy(false);
     }
@@ -175,7 +176,7 @@ export function OnboardFlow() {
       setLinkCode(json.linkCode);
       setStep("link");
     } catch (e) {
-      setError(errMsg(e));
+      setError(friendlyError(e));
     } finally {
       setBusy(false);
     }
@@ -349,7 +350,3 @@ function Stepper({ step }: { step: Step }) {
   );
 }
 
-function errMsg(e: unknown): string {
-  if (e && typeof e === "object" && "message" in e) return String((e as { message: unknown }).message).slice(0, 200);
-  return String(e).slice(0, 200);
-}
