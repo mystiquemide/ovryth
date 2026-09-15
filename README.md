@@ -44,7 +44,7 @@ Every piece of the money path is a named, load-bearing integration:
 - **Base Account (Coinbase Smart Wallet)** holds the project budget. Funds stay in the project's own account; nothing ever rests in an Ovryth wallet or contract. The account is also the owner identity for the console — pause and rules changes are signature-verified ERC-1271 messages from it.
 - **Spend Permissions + SpendPermissionManager** are the agent's leash. The project signs a weekly USDC allowance naming the payer contract as the only spender. The cap, the period, and revocation are enforced by Coinbase's manager contract on chain, not by Ovryth's code.
 - **OvrythPayer** is a minimal verified contract that can only run `pay()`: register the permission if needed, spend within the cap, forward the exact amount to the member. One transaction, nothing in between.
-- **CDP Paymaster** sponsors the owner's smart-account calls (including the one-signature revoke) through `/api/paymaster`, a server-side proxy that allowlists JSON-RPC methods so the CDP client key never reaches the browser. Payout gas is operator-funded, so the project never needs ETH.
+- **CDP Paymaster** sponsors the owner's smart-account calls (including the one-signature revoke) through `/api/paymaster`, a server-side proxy that allowlists JSON-RPC methods, validates JSON-RPC envelopes and body size, rate-limits requests, and keeps the CDP client key out of the browser. Payout gas is operator-funded, so the project never needs ETH.
 - **Telegram Bot API** is the agent's surface: it reads contributions in the group, replies with verdicts in-thread, and links member wallets by DM.
 - **Gemini / Groq** classify each message behind one zod schema; a deterministic policy layer clamps the model's proposal and can only lower it, never raise it.
 
@@ -57,7 +57,7 @@ Every piece of the money path is a named, load-bearing integration:
 | Over-cap payout reverts | [`0x2a0e8147`](https://basescan.org/tx/0x2a0e8147e07e9685d8a03443e86a7f605074d889a9d58361e7cb293d2429436b) |
 | Revoke in one signature | [`0x13994304`](https://basescan.org/tx/0x139943041ac91448f6de842ec9151af6e71fa577a564fc82b202bd81ac6d2c96) |
 | Payer contract, verified source | [`0x4854…3999`](https://basescan.org/address/0x485457f86fbf5e2385ae183bd5518c7d965e3999#code) |
-| CI | tsc, eslint, vitest, build, forge tests on every push |
+| CI | dependency audit, tsc, eslint, 51 Vitest tests, build, and 7 Base-fork Foundry tests on every push |
 
 ## What it is not
 
@@ -94,7 +94,8 @@ npm run dev                  # http://localhost:3000
 
 ```bash
 npm run env:check            # prints SET/MISSING for every required variable
-npm test                     # vitest, 45 tests
+npm audit --audit-level=high # CI requires a clean high-severity dependency audit
+npm test                     # vitest, 51 tests
 npm run build
 cd contracts && forge test --fork-url https://mainnet.base.org   # needs foundry v1.0.0
 ```
