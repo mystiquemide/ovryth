@@ -44,6 +44,18 @@ export function RevokePermission({
     return providerRef.current;
   }
 
+  async function confirmOnce(): Promise<string | null> {
+    const res = await fetch(`/api/rooms/${slug}/revoke`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: "{}",
+    });
+    const json = await res.json();
+    if (res.ok) return (json.txHash as string) ?? "";
+    if (res.status === 409) return null; // revoke tx not mined yet
+    throw new Error(json.error ?? "could not confirm the revoke");
+  }
+
   async function revoke() {
     setError(null);
     setBusy(true);
@@ -54,16 +66,19 @@ export function RevokePermission({
         throw new Error(`Connected account is not the room owner. Expected ${ownerAccount}.`);
       }
       const { requestRevoke } = await import("@base-org/account/spend-permission/browser");
-      const txHash = (await requestRevoke({ provider: provider as never, permission: sdkPermission as never })) as string;
+      // wallet_sendCalls resolves to a call-bundle id, not a tx hash — poll until the
+      // revoke lands on chain and let the API discover the real hash from the event.
+      await requestRevoke({ provider: provider as never, permission: sdkPermission as never });
 
-      const res = await fetch(`/api/rooms/${slug}/revoke`, {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ txHash }),
-      });
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.error ?? "could not confirm the revoke");
-      setDoneHash(txHash);
+      const deadline = Date.now() + 90_000;
+      let hash: string | null = null;
+      while (Date.now() < deadline) {
+        hash = await confirmOnce();
+        if (hash !== null) break;
+        await new Promise((r) => setTimeout(r, 2500));
+      }
+      if (hash === null) throw new Error("Revoke was sent but hasn't landed on chain yet. Refresh this page in a minute and it will show as revoked.");
+      setDoneHash(hash || null);
       setIsRevoked(true);
     } catch (e) {
       setError(msg(e));
@@ -90,7 +105,7 @@ export function RevokePermission({
     <div className="mt-3">
       {error && <div className="mb-3"><StatusBanner tone="warn" title="Something went wrong">{error}</StatusBanner></div>}
       <Button variant="secondary" onClick={revoke} disabled={busy}>
-        {busy ? "Confirm in your wallet…" : "Revoke permission"}
+        {busy ? "Revoking…" : "Revoke permission"}
       </Button>
       <p className="mt-2 text-[12px] text-fog">
         Connects the room owner account and asks it to sign the revoke. One transaction, gas paid by the account.
