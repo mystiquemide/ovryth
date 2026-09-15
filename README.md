@@ -1,18 +1,26 @@
 # Ovryth
 
-An AI agent that runs payroll for token communities. Ovryth lives inside a project's Telegram: it reads every contribution, decides what counts as real work under the project's own rules, and pays members in USDC on Base within minutes, refusing copied and low-effort posts in public with a reason. The project keeps its weekly budget in its own Base Account, and the agent can never spend past the cap because the cap is enforced on chain.
+An AI agent that runs payroll for token communities on Base. Ovryth lives inside a project's Telegram group: it reads every contribution, decides what counts as real work under the project's own rules, and pays members in USDC within minutes — refusing copied and low-effort posts in public, with a reason. The budget never leaves the project's own Base Account, and the on-chain spend permission caps every move the agent can make.
 
-**Live:** [ovryth.midelabs.xyz](https://ovryth.midelabs.xyz) · **Room:** [ovryth.midelabs.xyz/room](https://ovryth.midelabs.xyz/room) · **Proof:** [ovryth.midelabs.xyz/proof](https://ovryth.midelabs.xyz/proof) · **Bot:** [@Ovryth_bot](https://t.me/Ovryth_bot) · **Code:** [github.com/mystiquemide/ovryth](https://github.com/mystiquemide/ovryth)
+Built for the Orion Builder Hackathon (AI agents).
+
+**Live:** [ovryth.midelabs.xyz](https://ovryth.midelabs.xyz) · **Room:** [ovryth.midelabs.xyz/room](https://ovryth.midelabs.xyz/room) · **Demo group:** [t.me/ovryth_demo_room](https://t.me/ovryth_demo_room) · **Proof:** [ovryth.midelabs.xyz/proof](https://ovryth.midelabs.xyz/proof) · **Bot:** [@Ovryth_bot](https://t.me/Ovryth_bot) · **X:** [@ovryth](https://x.com/ovryth)
 
 ![The weekly budget bar](https://ovryth.midelabs.xyz/og.png)
 
 ## Try it in two minutes
 
-1. Open the [live room](https://ovryth.midelabs.xyz/room) and join its Telegram group.
+1. Join the demo group: [t.me/ovryth_demo_room](https://t.me/ovryth_demo_room). The agent is an admin there.
 2. DM [@Ovryth_bot](https://t.me/Ovryth_bot): `/wallet 0xYourBaseAddress` — this is where USDC lands.
 3. Answer one pinned question in the group with real, specific work.
 4. The agent replies `Paid X USDC …` with a BaseScan link within minutes.
 5. Post a copy of someone's paid answer from a second account. The agent refuses it in public with the reason.
+
+## The agent
+
+Per message, Ovryth loops: read → a cheap pre-filter (length, links, duplicates, account-age and tenure floors) → a model classifies the message against the room's rules and proposes an amount inside the category range → a deterministic policy layer applies the caps and can only lower or zero the amount, never raise it → the agent acts. Pay in one transaction, hold for 72 hours when no wallet is linked, or refuse in public with a fixed reason. Recipients come only from a wallet the member linked by DM, never from message text.
+
+The spend permission is the leash. The agent can never move more than the weekly cap, and the project cuts the leash with one signature, from the owner console or its own Base Account — see [`0x13994304…d2c96`](https://basescan.org/tx/0x139943041ac91448f6de842ec9151af6e71fa577a564fc82b202bd81ac6d2c96).
 
 ## What happens on chain
 
@@ -22,12 +30,6 @@ Project Base Account  →  SpendPermissionManager  →  OvrythPayer  →  Member
 ```
 
 A payout is one transaction from the project's account to the member. The first payout registers the signed permission (`approveWithSignature`), spends within the weekly cap, then transfers to the member — see [`0x9d44d136…392270`](https://basescan.org/tx/0x9d44d136f7ab6e6988c8f5e17a2d2c5a0b2a744f7d96b12267fb082239392270). The payer contract has no withdraw function and no arbitrary call; it can only run `pay()` against a permission that names it as spender.
-
-## The agent
-
-Ovryth is the agent, not a dashboard waiting on a human. Per message it loops: read → a cheap pre-filter (length, links, duplicates, floors) → a model classifies the message against the room's rules and proposes an amount inside the category range → a deterministic policy layer applies caps and can only lower or zero the amount, never raise it → the agent acts. Pay in one transaction, hold for 72 hours when no wallet is linked, or refuse in public with a fixed reason. Recipients come only from a wallet the member linked by DM, never from message text.
-
-The spend permission is the leash. The agent can never move more than the weekly cap, and the project cuts the leash with one signature, from its own Base Account or the owner console — see [`0x13994304…d2c96`](https://basescan.org/tx/0x139943041ac91448f6de842ec9151af6e71fa577a564fc82b202bd81ac6d2c96).
 
 ## Proof
 
@@ -46,6 +48,7 @@ No leaderboard, no XP, no quests, no treasury wallet, no moderation tooling, no 
 
 | | Ovryth | Valor (checked 2026-09-14) | Zealy AI review (checked 2026-09-14) |
 |---|---|---|---|
+| What runs it | An agent, end to end: reads, decides, pays, refuses | Reviewer tooling | Quest review flow |
 | Budget custody | Project's own Base Account | Treasury wallet | Platform-held |
 | Cap enforcement | On chain, in the permission | App-side | App-side |
 | Public refusals with reasons | Yes | No | No |
@@ -58,6 +61,10 @@ Live on Base mainnet with real USDC: room creation, Telegram intake, scoring, pa
 ## Rules and refusals
 
 Each room publishes its own rules: paid categories with USDC ranges, a per-member weekly cap, a room daily cap, and account-age/tenure floors. The model classifies a message against the rules and proposes an amount inside the category range; a deterministic policy layer can only lower that amount or zero it, never raise it. Refusals carry one of a fixed set of reasons — no substance, duplicate, too new, over cap — and appear publicly on the room page, at most one public refusal per member per day.
+
+## Stack
+
+Next.js 16, React 19, Tailwind v4, TypeScript strict · viem + `@base-org/account` spend permissions · Coinbase SpendPermissionManager + custom verified payer contract (Foundry) · Prisma on Postgres · raw Telegram Bot API · Groq/Gemini classification seam.
 
 ## Run locally
 
