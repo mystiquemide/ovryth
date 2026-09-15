@@ -2,7 +2,7 @@
 
 Payroll for real community work. A project keeps its weekly USDC budget in its own Base Account; Ovryth pays members who do real work in the project's Telegram within minutes, refuses copied and low-effort work in public with a reason, and can never spend past the cap because the cap is enforced on chain.
 
-**Live:** [ovryth.midelabs.xyz](https://ovryth.midelabs.xyz) · **Room:** [ovryth.midelabs.xyz/room](https://ovryth.midelabs.xyz/room) · **Proof:** [ovryth.midelabs.xyz/proof](https://ovryth.midelabs.xyz/proof) · **Bot:** [@Ovryth_bot](https://t.me/Ovryth_bot)
+**Live:** [ovryth.midelabs.xyz](https://ovryth.midelabs.xyz) · **Room:** [ovryth.midelabs.xyz/room](https://ovryth.midelabs.xyz/room) · **Proof:** [ovryth.midelabs.xyz/proof](https://ovryth.midelabs.xyz/proof) · **Bot:** [@Ovryth_bot](https://t.me/Ovryth_bot) · **Code:** [github.com/mystiquemide/ovryth](https://github.com/mystiquemide/ovryth)
 
 ![The weekly budget bar](https://ovryth.midelabs.xyz/og.png)
 
