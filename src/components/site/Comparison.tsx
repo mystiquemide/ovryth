@@ -1,11 +1,16 @@
 const COLS = [
-  { key: "ovryth", name: "Ovryth", sub: "this build" },
+  { key: "ovryth", name: "Ovryth", sub: "AI payroll agent" },
   { key: "zealy", name: "Zealy AI review", sub: "Plus plan" },
 ] as const;
 
 type Row = { dim: string; ovryth: string; zealy: string };
 
 const ROWS: Row[] = [
+  {
+    dim: "What runs it",
+    ovryth: "An agent, end to end: it reads, decides, pays, and refuses with no human approving each payment.",
+    zealy: "A quest platform; AI assists the review.",
+  },
   {
     dim: "Who holds the budget",
     ovryth: "The project, in its own Base Account. Ovryth only touches each approved payout, once, in the payout transaction.",

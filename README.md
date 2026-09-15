@@ -1,6 +1,6 @@
 # Ovryth
 
-Payroll for real community work. A project keeps its weekly USDC budget in its own Base Account; Ovryth pays members who do real work in the project's Telegram within minutes, refuses copied and low-effort work in public with a reason, and can never spend past the cap because the cap is enforced on chain.
+An AI agent that runs payroll for token communities. Ovryth lives inside a project's Telegram: it reads every contribution, decides what counts as real work under the project's own rules, and pays members in USDC on Base within minutes, refusing copied and low-effort posts in public with a reason. The project keeps its weekly budget in its own Base Account, and the agent can never spend past the cap because the cap is enforced on chain.
 
 **Live:** [ovryth.midelabs.xyz](https://ovryth.midelabs.xyz) · **Room:** [ovryth.midelabs.xyz/room](https://ovryth.midelabs.xyz/room) · **Proof:** [ovryth.midelabs.xyz/proof](https://ovryth.midelabs.xyz/proof) · **Bot:** [@Ovryth_bot](https://t.me/Ovryth_bot) · **Code:** [github.com/mystiquemide/ovryth](https://github.com/mystiquemide/ovryth)
 
@@ -11,8 +11,8 @@ Payroll for real community work. A project keeps its weekly USDC budget in its o
 1. Open the [live room](https://ovryth.midelabs.xyz/room) and join its Telegram group.
 2. DM [@Ovryth_bot](https://t.me/Ovryth_bot): `/wallet 0xYourBaseAddress` — this is where USDC lands.
 3. Answer one pinned question in the group with real, specific work.
-4. The bot replies `Paid X USDC …` with a BaseScan link within minutes.
-5. Post a copy of someone's paid answer from a second account. It is refused in public with the reason.
+4. The agent replies `Paid X USDC …` with a BaseScan link within minutes.
+5. Post a copy of someone's paid answer from a second account. The agent refuses it in public with the reason.
 
 ## What happens on chain
 
@@ -23,6 +23,12 @@ Project Base Account  →  SpendPermissionManager  →  OvrythPayer  →  Member
 
 A payout is one transaction from the project's account to the member. The first payout registers the signed permission (`approveWithSignature`), spends within the weekly cap, then transfers to the member — see [`0x9d44d136…392270`](https://basescan.org/tx/0x9d44d136f7ab6e6988c8f5e17a2d2c5a0b2a744f7d96b12267fb082239392270). The payer contract has no withdraw function and no arbitrary call; it can only run `pay()` against a permission that names it as spender.
 
+## The agent
+
+Ovryth is the agent, not a dashboard waiting on a human. Per message it loops: read → a cheap pre-filter (length, links, duplicates, floors) → a model classifies the message against the room's rules and proposes an amount inside the category range → a deterministic policy layer applies caps and can only lower or zero the amount, never raise it → the agent acts. Pay in one transaction, hold for 72 hours when no wallet is linked, or refuse in public with a fixed reason. Recipients come only from a wallet the member linked by DM, never from message text.
+
+The spend permission is the leash. The agent can never move more than the weekly cap, and the project cuts the leash with one signature, from its own Base Account or the owner console — see [`0x13994304…d2c96`](https://basescan.org/tx/0x139943041ac91448f6de842ec9151af6e71fa577a564fc82b202bd81ac6d2c96).
+
 ## Proof
 
 | Claim | Evidence |
@@ -30,7 +36,7 @@ A payout is one transaction from the project's account to the member. The first 
 | Spend permission approved on chain | Inside the first payout tx — [`0x9d44d136`](https://basescan.org/tx/0x9d44d136f7ab6e6988c8f5e17a2d2c5a0b2a744f7d96b12267fb082239392270) |
 | Capped payout to a linked member wallet | [`0xdd81d096`](https://basescan.org/tx/0xdd81d096bfc7edcccda3a327549e8f14953c0c816b1021f90bf2cbd3fa34635a) |
 | Over-cap payout reverts | [`0x2a0e8147`](https://basescan.org/tx/0x2a0e8147e07e9685d8a03443e86a7f605074d889a9d58361e7cb293d2429436b) |
-| Revoke | One signature from the project's account; recorded on [/proof](https://ovryth.midelabs.xyz/proof) once executed |
+| Revoke in one signature | [`0x13994304`](https://basescan.org/tx/0x139943041ac91448f6de842ec9151af6e71fa577a564fc82b202bd81ac6d2c96) |
 | Payer contract, verified source | [`0x4854…3999`](https://basescan.org/address/0x485457f86fbf5e2385ae183bd5518c7d965e3999#code) |
 | CI | tsc, eslint, vitest, build, forge tests on every push |
 

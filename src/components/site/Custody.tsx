@@ -39,8 +39,9 @@ export function Custody() {
         <p className="eyebrow">How the money moves</p>
         <h2 className="h1 mt-3 max-w-[680px]">Nothing rests in between</h2>
         <p className="body-lg mt-4 max-w-[620px] text-smoke">
-          A payout is one on-chain transaction from your account to the member, authorized by a spend permission that
-          Ovryth can never exceed. No pooled wallet, no float, no custody.
+          The agent decides and executes every payment on its own, but it works on a leash: a spend permission
+          authorizes one transaction from your account to the member and caps it on chain. No pooled wallet, no
+          float, no custody, and one signature takes the leash back.
         </p>
 
         <div className="mt-12 flex flex-col gap-3 md:flex-row md:items-stretch">

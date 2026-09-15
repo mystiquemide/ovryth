@@ -16,7 +16,7 @@ export default function OpenRoomPage() {
           </div>
           <div className="mb-8">
             <p className="eyebrow">Open a room</p>
-            <h1 className="h2 mt-2">Fund a cap, link your group, pay for real work</h1>
+            <h1 className="h2 mt-2">Fund a cap, link your group, put the agent to work</h1>
           </div>
           <OnboardFlow />
         </div>

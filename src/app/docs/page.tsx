@@ -34,11 +34,13 @@ const ENDPOINTS: [string, string, string, string][] = [
   ["GET", "/api/rooms/[slug]", "Public", "Public room JSON: room, permission status, rules version, this week's payouts and refusals, totals."],
   ["PUT", "/api/rooms/[slug]/rules", "Owner signature", "Publish a new rules version. Returns { version }."],
   ["POST", "/api/rooms/[slug]/pause", "Owner signature", "Pause or resume scoring. Body { paused: boolean }."],
+  ["POST", "/api/rooms/[slug]/revoke", "Public", "Confirms the permission is revoked on chain, records the revoke transaction, and stops the room."],
   ["POST", "/api/telegram", "Secret header", "Telegram webhook. Always 200 after storing; work runs after the response."],
   ["POST", "/api/tick", "Bearer TICK_SECRET", "Sweeper: retry payouts, release holds, poll permission status, alert on low gas."],
 ];
 
 const CONCEPTS: [string, string][] = [
+  ["The agent", "Ovryth is an AI agent that runs inside a linked Telegram group: it reads every message, decides what counts as real work under the room's rules, and executes the payment itself. No human signs each payout. The spend permission is its leash, bounding every move it can make, and the owner can cut the leash with one signature."],
   ["Base Account", "A smart-wallet account on Base that can sign a spend permission. Plain seed-phrase wallets (EOAs) are not supported."],
   ["Spend permission", "A signed, on-chain authorization letting the Ovryth payer spend up to a weekly allowance from the project's account, and no more. Revocable in one transaction."],
   ["Weekly cap", "The allowance per 7-day period. A payout past it reverts on chain. It resets each period."],
@@ -55,7 +57,7 @@ export default function DocsPage() {
       <main id="main-content" className="mx-auto max-w-[1064px] px-6 py-16">
         <p className="eyebrow">Documentation</p>
         <h1 className="h1 mt-3">Ovryth docs</h1>
-        <p className="body-lg mt-4 max-w-[640px] text-smoke">Everything needed to understand, use, and build on Ovryth: payroll for real community work, paid in USDC on Base.</p>
+        <p className="body-lg mt-4 max-w-[640px] text-smoke">Everything needed to understand, use, and build on Ovryth: an AI payroll agent for token communities, paying in USDC on Base.</p>
 
         <div className="mt-8 flex flex-wrap gap-2">
           {[
@@ -76,12 +78,12 @@ export default function DocsPage() {
           <div className="max-w-[680px]">
             <section>
               <H id="overview">Overview</H>
-              <P>Ovryth pays members who do real work in a project&apos;s Telegram, in USDC on Base, within minutes. The project keeps its budget in its own Base Account and grants Ovryth a capped, revocable spend permission. Low-quality or copied messages are refused in public with a reason, and Ovryth can never spend past the weekly cap because the cap is enforced on chain.</P>
+              <P>Ovryth is an AI agent that works inside a project&apos;s Telegram: it reads every message, decides what counts as real work under the project&apos;s rules, and pays members in USDC on Base within minutes. The project keeps its budget in its own Base Account and grants the agent a capped, revocable spend permission, its leash. Low-quality or copied messages are refused in public with a reason, and the agent can never spend past the weekly cap because the cap is enforced on chain.</P>
             </section>
 
             <section className="mt-12">
               <H id="how-it-works">How it works</H>
-              <P>A project funds a weekly cap in its Base Account and grants a spend permission naming the Ovryth payer contract as the only spender. Members post work in the project&apos;s Telegram group where Ovryth is an admin. Each message is scored against the project&apos;s rules; real work is paid, and everything else is refused in public. Every payout is a single on-chain transaction, and a payout past the cap reverts.</P>
+              <P>A project funds a weekly cap in its Base Account and grants a spend permission naming the Ovryth payer contract as the only spender. Members post work in the project&apos;s Telegram group where the agent is an admin. For each message the agent scores it against the project&apos;s rules and acts on its own: pay, hold, or refuse in public. Every payout is a single on-chain transaction, and a payout past the cap reverts.</P>
             </section>
 
             <section className="mt-12">
@@ -106,7 +108,7 @@ export default function DocsPage() {
 
             <section className="mt-12">
               <H id="room-flow">Room flow</H>
-              <P>For each message: a cheap pre-filter checks length, links, duplicates, and floors. Candidates that pass go to the model, which classifies the message against the room&apos;s categories and proposes an amount within the category range. A deterministic policy layer then applies floors and caps and can only lower or zero the amount, never raise it. The result is a payout to the member&apos;s linked wallet, a 72-hour hold if there is no wallet, or a public refusal. Recipients come only from the wallet a member linked in a DM, never from message text.</P>
+              <P>The agent loop, per message: a cheap pre-filter checks length, links, duplicates, and floors. Candidates that pass go to the model, which classifies the message against the room&apos;s categories and proposes an amount within the category range. A deterministic policy layer then applies floors and caps and can only lower or zero the amount, never raise it. The agent then acts on the result: a payout to the member&apos;s linked wallet, a 72-hour hold if there is no wallet, or a public refusal. Recipients come only from the wallet a member linked in a DM, never from message text.</P>
             </section>
 
             <section className="mt-12">
@@ -121,7 +123,7 @@ export default function DocsPage() {
 
             <section className="mt-12">
               <H id="console">Console</H>
-              <P>The owner console at <Code>/console</Code> shows the weekly budget bar, the spend permission, the ledger of paid and refused contributions, and operator notes (last sweeper run, pending jobs, operator gas). Owners connect their Base Account to pause or resume the room and edit the rules; both actions are signed and verified against the room owner. Revoking is done from the Base Account&apos;s own permissions screen and stops Ovryth immediately.</P>
+              <P>The owner console at <Code>/console</Code> shows the weekly budget bar, the spend permission, the ledger of paid and refused contributions, and operator notes (last sweeper run, pending jobs, operator gas). Owners connect their Base Account to pause or resume the room, edit the rules, and revoke the spend permission. Pauses and rules are signed and verified against the room owner; revoking is one wallet confirmation that lands on chain, and the room stops the moment the chain reads revoked.</P>
             </section>
 
             <section className="mt-12">

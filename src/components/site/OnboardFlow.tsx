@@ -210,7 +210,7 @@ export function OnboardFlow() {
       )}
 
       {step === "connect" && (
-        <Card title="Connect your Base Account" body="A Base Account is a smart wallet that holds the weekly budget and signs a spend permission naming Ovryth the only spender. Plain EOAs can't do this, which is why a Base Account is required.">
+        <Card title="Connect your Base Account" body="A Base Account is a smart wallet that holds the weekly budget and signs a spend permission naming the Ovryth agent the only spender. Plain EOAs can't do this, which is why a Base Account is required.">
           <ol className="mb-6 space-y-2 text-[14px] text-smoke">
             {["Connect your Base Account", "Set a weekly USDC cap", "Sign the spend permission", "Link your Telegram group"].map((s, i) => (
               <li key={s} className="flex gap-2.5"><span className="mono text-fog">{i + 1}.</span>{s}</li>
@@ -297,7 +297,7 @@ export function OnboardFlow() {
       )}
 
       {step === "done" && slug && (
-        <Card title="Room is live" body="Ovryth is now watching your group. The first real contribution gets paid within minutes.">
+        <Card title="Room is live" body="The agent is now watching your group. The first real contribution gets paid within minutes.">
           <div className="space-y-2">
             <a href={`/r/${slug}`} className="block text-[14px] text-link hover:underline">Public room page →</a>
             <a href={`/console/${slug}`} className="block text-[14px] text-link hover:underline">Owner console →</a>

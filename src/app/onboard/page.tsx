@@ -5,15 +5,15 @@ import { ButtonLink } from "@/components/ui/Button";
 export const metadata = { title: "Onboard · Ovryth", alternates: { canonical: "/onboard" } };
 
 const HOW = [
-  ["A project funds a weekly cap", "The project puts a weekly USDC budget in its own Base Account and grants Ovryth a spend permission. The cap lives on chain and can be revoked in one signature."],
-  ["Members do real work in Telegram", "People answer questions, translate docs, and write guides in the project's existing Telegram group, where Ovryth is an admin."],
-  ["Ovryth pays for good work, refuses the rest", "Each message is scored against the project's rules. Real work is paid in USDC within minutes. Farming and copies are refused in public, with a reason."],
-  ["The cap can never be crossed", "Payouts are one on-chain transaction from the project's account to the member. Ovryth never holds funds, and a payout past the cap reverts."],
+  ["A project funds a weekly cap", "The project puts a weekly USDC budget in its own Base Account and grants the Ovryth agent a spend permission. The cap lives on chain and can be revoked in one signature."],
+  ["Members do real work in Telegram", "People answer questions, translate docs, and write guides in the project's existing Telegram group, where the agent is an admin."],
+  ["The agent pays for good work, refuses the rest", "The agent scores each message against the project's rules and acts on its own. Real work is paid in USDC within minutes. Farming and copies are refused in public, with a reason."],
+  ["The cap can never be crossed", "Payouts are one on-chain transaction from the project's account to the member. The agent never holds funds, and a payout past the cap reverts."],
 ];
 
 const GLOSSARY = [
   ["Base Account", "A smart-wallet account on Base (from the Base app or Coinbase Wallet). It is what lets a project sign a spend permission. A plain seed-phrase wallet (EOA) cannot do this."],
-  ["Spend permission", "A signed, on-chain rule that lets Ovryth spend up to a set amount per week, from the project's account, and nothing more. Revocable any time."],
+  ["Spend permission", "A signed, on-chain rule that lets the agent spend up to a set amount per week, from the project's account, and nothing more. Revocable any time."],
   ["Non-custodial", "Ovryth never holds your money. The budget stays in the project's account until a single transaction pays a member."],
   ["Public refusals", "If a message is not real work, Ovryth says so in the group with a short reason, once per person per day."],
   ["Approximate account age", "Telegram does not expose when an account was created, so Ovryth estimates it from the user id and when they were first seen. It is labeled as approximate."],
@@ -64,8 +64,9 @@ export default function OnboardPage() {
         <p className="eyebrow">Onboard</p>
         <h1 className="h1 mt-3 max-w-[620px]">New to Ovryth? Start here</h1>
         <p className="body-lg mt-4 max-w-[640px] text-smoke">
-          Ovryth pays people for real work in a project&apos;s Telegram, in USDC on Base. This page explains what that
-          means and what you need before you open or join a room. No prior crypto experience assumed.
+          Ovryth is an AI agent that pays people for real work in a project&apos;s Telegram, in USDC on Base. This
+          page explains what that means and what you need before you open or join a room. No prior crypto experience
+          assumed.
         </p>
 
         <section className="mt-14 border-t border-mist pt-12">

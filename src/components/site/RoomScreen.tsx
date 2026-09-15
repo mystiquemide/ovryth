@@ -21,11 +21,11 @@ const STATUS: Record<string, { kind: VerdictKind; word: string }> = {
 };
 
 const STEPS = [
-  ["1", "Join this Telegram group", "Ovryth is an admin there, reading messages and paying for real work."],
+  ["1", "Join this Telegram group", "The Ovryth agent is an admin there, reading every message and paying for real work."],
   ["2", "DM the bot your wallet", "Send /wallet 0x… once. That address is where your USDC lands."],
   ["3", "Answer a pinned question", "Post a real, substantive answer to one of the questions below."],
-  ["4", "Get paid within minutes", "Ovryth replies with the amount, the reason, and a BaseScan link."],
-  ["5", "Try to game it", "Copy the answer from a second account. It gets refused in public."],
+  ["4", "Get paid within minutes", "The agent replies with the amount, the reason, and a BaseScan link."],
+  ["5", "Try to game it", "Copy the answer from a second account. The agent refuses it in public."],
 ];
 
 export function RoomScreen({ room }: { room: RoomView }) {
@@ -38,7 +38,7 @@ export function RoomScreen({ room }: { room: RoomView }) {
         <header className="border-b border-mist pb-8">
           <div className="flex flex-wrap items-center gap-3">
             <h1 className="h2">{room.name}</h1>
-            <Pill>USDC payroll</Pill>
+            <Pill>AI payroll agent</Pill>
             <VerdictPill kind={status.kind}>{status.word}</VerdictPill>
             {room.seeded && <Pill>demo room</Pill>}
             {room.external && <Pill>external room</Pill>}

@@ -34,7 +34,7 @@ export async function handleDm(msg: TgMessage): Promise<void> {
       return;
     }
     case "/start":
-      await sendMessage(msg.chat.id, "Ovryth pays for real community work. Send /wallet 0xYourBaseAddress to link where you get paid, then contribute in a room where Ovryth is active.");
+      await sendMessage(msg.chat.id, "Ovryth is an AI payroll agent: it pays for real community work in rooms where it is active. Send /wallet 0xYourBaseAddress to link where you get paid, then contribute.");
       return;
     default:
       await sendMessage(msg.chat.id, "Commands: /wallet 0x… to link your payout address, /rules to see your rooms.");

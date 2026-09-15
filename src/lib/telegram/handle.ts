@@ -75,7 +75,7 @@ async function handleGroupInfo(msg: TgMessage, cmd: string): Promise<void> {
 
   await sendMessage(
     msg.chat.id,
-    `Ovryth pays for real work in this room, in USDC on Base. DM me /wallet 0x… to link where you get paid, then contribute here. Rules: ${link}`,
+    `I'm the payroll agent for this room: I read every message and pay for real work in USDC on Base. DM me /wallet 0x… to link where you get paid, then contribute here. Rules: ${link}`,
     { replyToMessageId: msg.message_id },
   );
 }

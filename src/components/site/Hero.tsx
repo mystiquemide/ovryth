@@ -15,11 +15,12 @@ export async function Hero() {
     <section className="relative px-6 pt-20 pb-16 md:pt-28">
       <EdgeDecor />
       <div className="relative z-10 mx-auto max-w-[880px] text-center">
-        <p className="eyebrow">Payroll for real community work</p>
-        <h1 className="h-display mt-4">Pay members for real work. Never past your cap.</h1>
+        <p className="eyebrow">AI payroll agent</p>
+        <h1 className="h-display mt-4">An agent that pays for real work. Never past your cap.</h1>
         <p className="body-lg mx-auto mt-5 max-w-[620px] text-smoke">
-          Your project keeps the budget in its own Base Account. Ovryth pays members who do real work in your Telegram
-          within minutes, refuses duplicate and low-effort work in public, and can never spend past your weekly cap.
+          Ovryth is an AI agent that lives in your project&apos;s Telegram. It reads every contribution, pays members
+          for real work in USDC within minutes, and refuses duplicate or low-effort posts in public. The budget stays
+          in your own Base Account, and the weekly cap is enforced on chain, a line the agent can never cross.
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
           <ButtonLink href="/open" variant="primary">Open a room</ButtonLink>

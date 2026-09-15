@@ -44,8 +44,8 @@ export function Footer() {
         <div className="mx-auto max-w-[720px]">
           <h2 className="h1">Open a room this week</h2>
           <p className="body-lg mx-auto mt-4 max-w-[520px] text-smoke">
-            Fund a weekly cap in your own Base Account, add the bot to your Telegram, and start paying members for real
-            work within minutes.
+            Fund a weekly cap in your own Base Account, add the agent to your Telegram, and it starts paying members
+            for real work within minutes.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <ButtonLink href="/open" variant="primary">Open a room</ButtonLink>
@@ -60,7 +60,7 @@ export function Footer() {
             <div className="max-w-[320px]">
               <Wordmark size={26} />
               <p className="mt-3 text-[14px] leading-relaxed text-smoke">
-                Payroll for real community work. Paid in USDC on Base, capped on chain.
+                An AI agent that pays for real community work. USDC on Base, capped on chain.
               </p>
               <p className="mono mt-3 text-[12px] text-fog">Base mainnet · chain id 8453</p>
             </div>

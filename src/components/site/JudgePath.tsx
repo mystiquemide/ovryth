@@ -5,11 +5,11 @@ import { SHOWCASE_SLUG } from "@/lib/room-view";
 const BOT_URL = "https://t.me/Ovryth_bot";
 
 const STEPS = [
-  { n: "1", title: "Join the room's Telegram group", body: "Ovryth is an admin there, reading messages and paying for real work." },
+  { n: "1", title: "Join the room's Telegram group", body: "The Ovryth agent is an admin there, reading every message and paying for real work." },
   { n: "2", title: "DM the bot your wallet", body: "Send /wallet 0x… once. That address is where your USDC lands. Nothing else." },
   { n: "3", title: "Answer a pinned question", body: "Post a real, substantive answer to one of the pinned questions below." },
-  { n: "4", title: "Get paid within minutes", body: "Ovryth replies in-thread with the amount, the reason, and a BaseScan link to the transfer." },
-  { n: "5", title: "Try to game it", body: "Copy the answer from a second account. It gets refused in public, with the reason." },
+  { n: "4", title: "Get paid within minutes", body: "The agent replies in-thread with the amount, the reason, and a BaseScan link to the transfer." },
+  { n: "5", title: "Try to game it", body: "Copy the answer from a second account. The agent refuses it in public, with the reason." },
 ];
 
 export async function JudgePath() {
@@ -21,8 +21,8 @@ export async function JudgePath() {
         <p className="eyebrow">Try it</p>
         <h2 className="h1 mt-3 max-w-[640px]">Get paid in two minutes</h2>
         <p className="body-lg mt-4 max-w-[620px] text-smoke">
-          This is the thing to actually do. Answer a real question in the group and Ovryth pays your own wallet, on
-          Base, while you watch.
+          This is the thing to actually do. Answer a real question in the group and the agent pays your own wallet,
+          on Base, while you watch.
         </p>
 
         <div className="mt-12 grid gap-12 lg:grid-cols-[1fr_460px] lg:gap-16">
