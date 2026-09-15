@@ -157,7 +157,9 @@ export function ConsoleControls({
       </div>
 
       {!isOwner && (
-        <StatusBanner tone="warn" title="Not the owner">This account is not the room owner, so signed actions will be rejected.</StatusBanner>
+        <StatusBanner tone="warn" title="Not the owner">
+          Signed actions need the room owner account, <span className="mono">{ownerAccount}</span>. Switch to it in your wallet and reconnect.
+        </StatusBanner>
       )}
       {error && <StatusBanner tone="warn" title="Something went wrong">{error}</StatusBanner>}
       {notice && <StatusBanner tone="paid" title="Done">{notice}</StatusBanner>}

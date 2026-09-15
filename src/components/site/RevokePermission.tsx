@@ -51,7 +51,7 @@ export function RevokePermission({
       const provider = await getProvider();
       const accounts = (await provider.request({ method: "eth_requestAccounts" })) as string[];
       if (getAddress(accounts[0]) !== getAddress(ownerAccount)) {
-        throw new Error("Connected account is not the room owner. Connect the Base Account that holds this room's budget.");
+        throw new Error(`Connected account is not the room owner. Expected ${ownerAccount}.`);
       }
       const { requestRevoke } = await import("@base-org/account/spend-permission/browser");
       const txHash = (await requestRevoke({ provider: provider as never, permission: sdkPermission as never })) as string;
