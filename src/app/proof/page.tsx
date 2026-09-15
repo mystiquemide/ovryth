@@ -3,6 +3,7 @@ import { MinimalFooter } from "@/components/site/MinimalFooter";
 import { getProofArtifacts } from "@/lib/proof";
 
 export const metadata = { title: "Proof · Ovryth", alternates: { canonical: "/proof" } };
+export const revalidate = 60; // evidence page: pick up new txs (incl. the revoke) without a redeploy
 
 export default async function ProofPage() {
   const rows = await getProofArtifacts();
