@@ -63,7 +63,7 @@ export async function getProofArtifacts(): Promise<ProofRow[]> {
       kind: "address",
       value: PAYER,
       href: `${baseScanAddress(PAYER)}#code`,
-      note: "The OvrythPayer contract with verified source. No withdraw, no arbitrary call, no way to hold funds.",
+      note: "The OvrythPayer contract with verified source. No general withdrawal, arbitrary-call, ETH receive, or token rescue path; normal payouts pull and forward the exact token amount in one transaction.",
     },
     {
       label: "Last sweeper tick",

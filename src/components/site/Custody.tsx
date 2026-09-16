@@ -27,7 +27,7 @@ function Arrow() {
 }
 
 const NOT_DOING = [
-  { title: "No treasury wallet", body: "Ovryth never holds your funds. The budget stays in your Base Account until a single transaction pays a member." },
+  { title: "No treasury custody", body: "Ovryth does not custody the project's standing budget. Funds stay in the Base Account until payout; the exact payout amount only transits through the payer in the same transaction." },
   { title: "No leaderboard or XP", body: "There are no points to farm. Ovryth pays for real work once, in USDC, and refuses everything else." },
   { title: "No moderation", body: "Ovryth does not police your community. It reads messages only to decide what counts as paid work." },
 ];
@@ -37,11 +37,11 @@ export function Custody() {
     <section className="px-6 py-20 md:py-24">
       <div className="mx-auto max-w-[1064px]">
         <p className="eyebrow">How the money moves</p>
-        <h2 className="h1 mt-3 max-w-[680px]">Nothing rests in between</h2>
+        <h2 className="h1 mt-3 max-w-[680px]">One transaction, no pooled treasury</h2>
         <p className="body-lg mt-4 max-w-[620px] text-smoke">
-          The agent decides and executes every payment on its own, but it works on a leash: a spend permission
-          authorizes one transaction from your account to the member and caps it on chain. No pooled wallet, no
-          float, no custody, and one signature takes the leash back.
+          The agent decides and executes every payment on its own, but it works on a leash. The project budget stays in
+          its Base Account until payout. During a normal payout, the exact amount transits through OvrythPayer and is
+          forwarded to the member in the same transaction. The payer has no general withdrawal or arbitrary-call path.
         </p>
 
         <div className="mt-12 flex flex-col gap-3 md:flex-row md:items-stretch">
@@ -49,13 +49,13 @@ export function Custody() {
           <Arrow />
           <Node label="SpendPermissionManager" address={MANAGER} sub="enforces the cap on chain" />
           <Arrow />
-          <Node label="OvrythPayer" address={PAYER} sub="verified · cannot hold funds" />
+          <Node label="OvrythPayer" address={PAYER} sub="verified · no general withdrawal path" />
           <Arrow />
           <Node label="Member wallet" address={MEMBER} sub="paid in USDC" />
         </div>
 
         <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-[14px]">
-          <span className="text-smoke">One transaction, nothing rests in between.</span>
+          <span className="text-smoke">Normal payout: the exact amount transits through the payer in one transaction.</span>
           <a href={baseScanTx(TRACED_TX)} target="_blank" rel="noreferrer" className="mono text-link hover:underline">
             traced payout {shortHash(TRACED_TX)} ↗
           </a>

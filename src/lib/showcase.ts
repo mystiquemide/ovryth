@@ -2,10 +2,23 @@ import { prisma } from "./db";
 import { fromMicroUsdc } from "./rules";
 import type { VerdictRowData } from "@/components/VerdictRow";
 
-const WEEK_MS = 7 * 86_400_000;
-
 function timeLabel(d: Date): string {
   return d.toLocaleString("en-US", { weekday: "short", hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "UTC" });
+}
+
+function currentPermissionPeriod(start: bigint, periodSeconds: number, nowMs = Date.now()) {
+  const startMs = Number(start) * 1000;
+  const durationMs = Math.max(1, periodSeconds) * 1000;
+  const index = nowMs <= startMs ? 0 : Math.floor((nowMs - startMs) / durationMs);
+  const periodStartMs = startMs + index * durationMs;
+  return { startMs: periodStartMs, endMs: periodStartMs + durationMs, durationMs };
+}
+
+function formatReset(ms: number): string {
+  const d = new Date(ms);
+  const date = d.toLocaleDateString("en-US", { day: "numeric", month: "short", timeZone: "UTC" });
+  const time = d.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "UTC" });
+  return `${date} ${time} UTC`;
 }
 
 export interface ShowcaseData {
@@ -44,17 +57,31 @@ export async function getShowcase(slug = "ovryth"): Promise<ShowcaseData | null>
   ]);
 
   const confirmed = payouts.filter((p) => p.status === "confirmed");
-  const capUsdc = fromMicroUsdc(room.permission.allowanceUsdc);
-  const paidUsdc = confirmed.reduce((s, p) => s + fromMicroUsdc(p.amountUsdc), 0);
-  const now = Date.now();
+  const period = currentPermissionPeriod(room.permission.start, room.permission.periodSeconds);
+  const currentConfirmed = confirmed.filter((p) => {
+    const at = (p.confirmedAt ?? p.createdAt).getTime();
+    return at >= period.startMs && at < period.endMs;
+  });
+  const currentRefusals = refusals.filter((r) => {
+    const at = r.decision.decidedAt.getTime();
+    return at >= period.startMs && at < period.endMs;
+  });
+  const currentReverted = payouts.filter((p) => {
+    if (p.status !== "reverted") return false;
+    const at = (p.confirmedAt ?? p.createdAt).getTime();
+    return at >= period.startMs && at < period.endMs;
+  });
 
-  const segments = [...confirmed]
+  const capUsdc = fromMicroUsdc(room.permission.allowanceUsdc);
+  const paidUsdc = currentConfirmed.reduce((s, p) => s + fromMicroUsdc(p.amountUsdc), 0);
+
+  const segments = [...currentConfirmed]
     .sort((a, b) => (a.confirmedAt?.getTime() ?? 0) - (b.confirmedAt?.getTime() ?? 0))
     .map((p) => ({ amountUsdc: fromMicroUsdc(p.amountUsdc), txHash: p.txHash ?? undefined }));
 
-  const refusalTicks = refusals.map((r) => {
-    const at = r.decision.candidate.message.createdAt.getTime();
-    return { atFraction: Math.max(0.02, Math.min(0.98, 1 - (now - at) / WEEK_MS)) };
+  const refusalTicks = currentRefusals.map((r) => {
+    const at = r.decision.decidedAt.getTime();
+    return { atFraction: Math.max(0.02, Math.min(0.98, (at - period.startMs) / period.durationMs)) };
   });
 
   const paidRows: VerdictRowData[] = confirmed.map((p) => {
@@ -97,8 +124,8 @@ export async function getShowcase(slug = "ovryth"): Promise<ShowcaseData | null>
     paidUsdc,
     segments,
     refusals: refusalTicks,
-    reverted: payouts.some((p) => p.status === "reverted"),
-    resetLabel: "resets Mon 00:00 UTC",
+    reverted: currentReverted.length > 0,
+    resetLabel: `resets ${formatReset(period.endMs)}`,
     rows,
     questions: room.questions.map((q) => q.text),
     examplePaidTxHash: firstPaid?.txHash ?? null,

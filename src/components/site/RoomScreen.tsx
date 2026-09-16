@@ -22,11 +22,11 @@ const STATUS: Record<string, { kind: VerdictKind; word: string }> = {
 };
 
 const STEPS = [
-  ["1", "Join this Telegram group", "The Ovryth agent is an admin there, reading every message and paying for real work."],
-  ["2", "DM the bot your wallet", "Send /wallet 0x… once. That address is where your USDC lands."],
-  ["3", "Answer a pinned question", "Post a real, substantive answer to one of the questions below."],
-  ["4", "Get paid within minutes", "The agent replies with the amount, the reason, and a BaseScan link."],
-  ["5", "Try to game it", "Copy the answer from a second account. The agent refuses it in public."],
+  ["1", "Join the demo room", "The Ovryth agent is live there, reading contributions and applying the room's rules."],
+  ["2", "Inspect the rules", "The room shows its payout ranges, account-age floor, tenure floor, and weekly cap."],
+  ["3", "Inspect a real payout", "Open a paid contribution and follow its BaseScan link to the USDC transfer."],
+  ["4", "Inspect a refusal", "The ledger shows low-quality and duplicate work refused with a reason."],
+  ["5", "Try the agent", "DM /wallet and contribute if eligible. New participants remain subject to the room's eligibility rules."],
 ];
 
 export function RoomScreen({ room }: { room: RoomView }) {
@@ -68,7 +68,11 @@ export function RoomScreen({ room }: { room: RoomView }) {
         </header>
 
         <section className="border-b border-mist py-10">
-          <p className="eyebrow">Get paid in two minutes</p>
+          <p className="eyebrow">See Ovryth work</p>
+          <p className="mt-2 max-w-[680px] text-[14px] leading-relaxed text-smoke">
+            Inspect the real paid and refused examples below, or join the room to interact with the agent. New
+            contributors must still satisfy the room&apos;s account-age, tenure, and budget rules before a payout can happen.
+          </p>
           <div className="mt-6 grid gap-10 lg:grid-cols-[1fr_420px] lg:gap-14">
             <ol className="space-y-5">
               {STEPS.map(([n, title, body]) => (

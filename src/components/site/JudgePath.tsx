@@ -6,11 +6,11 @@ const BOT_URL = "https://t.me/Ovryth_bot";
 const GROUP_URL = "https://t.me/ovryth_demo_room";
 
 const STEPS = [
-  { n: "1", title: "Join the room's Telegram group", body: "The Ovryth agent is an admin there, reading every message and paying for real work." },
-  { n: "2", title: "DM the bot your wallet", body: "Send /wallet 0x… once. That address is where your USDC lands. Nothing else." },
-  { n: "3", title: "Answer a pinned question", body: "Post a real, substantive answer to one of the pinned questions below." },
-  { n: "4", title: "Get paid within minutes", body: "The agent replies in-thread with the amount, the reason, and a BaseScan link to the transfer." },
-  { n: "5", title: "Try to game it", body: "Copy the answer from a second account. The agent refuses it in public, with the reason." },
+  { n: "1", title: "Join the demo room", body: "The Ovryth agent is live there, reading contributions and applying the room's rules." },
+  { n: "2", title: "Inspect the rules", body: "The live room shows its payout ranges, account-age floor, tenure floor, and weekly cap." },
+  { n: "3", title: "Inspect a real payout", body: "Open a paid contribution and follow its BaseScan link to the real USDC transfer." },
+  { n: "4", title: "Inspect a refusal", body: "The demo also shows low-quality and duplicate work refused in public with a reason." },
+  { n: "5", title: "Try the agent", body: "DM /wallet and contribute if eligible. New participants remain subject to the room's eligibility rules." },
 ];
 
 export async function JudgePath() {
@@ -20,10 +20,11 @@ export async function JudgePath() {
     <section className="bg-snow px-6 py-20 md:py-24">
       <div className="mx-auto max-w-[1064px]">
         <p className="eyebrow">Try it</p>
-        <h2 className="h1 mt-3 max-w-[640px]">Get paid in two minutes</h2>
+        <h2 className="h1 mt-3 max-w-[640px]">See Ovryth work</h2>
         <p className="body-lg mt-4 max-w-[620px] text-smoke">
-          This is the thing to actually do. Answer a real question in the group and the agent pays your own wallet,
-          on Base, while you watch.
+          Explore real paid and refused contributions from the demo room, inspect every payout on Base, or join the
+          Telegram room to interact with the agent. New contributors are subject to the room&apos;s eligibility rules,
+          so joining now does not guarantee an immediate payout.
         </p>
 
         <div className="mt-12 grid gap-12 lg:grid-cols-[1fr_460px] lg:gap-16">
