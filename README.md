@@ -30,7 +30,8 @@
   <br />
   <a href="https://t.me/ovryth_demo_room">Demo group</a> ·
   <a href="https://t.me/Ovryth_bot">Telegram bot</a> ·
-  <a href="https://x.com/ovryth">X</a>
+  <a href="https://x.com/ovryth">X</a> ·
+  <a href="https://x.com/ovryth/status/2101566323935363441">Demo video</a>
 </p>
 
 Ovryth lives inside a project's Telegram group. It reads contributions, filters obvious farming, classifies useful work against the project's rules, applies deterministic payout policy, and pays contributors in USDC from the project's Base Account under a revocable onchain spend-permission cap.
@@ -39,6 +40,10 @@ No human signs each payout. The AI does not control the recipient wallet or the 
 
 <p align="center">
   <img alt="Ovryth weekly budget and payout proof" src="https://ovryth.midelabs.xyz/og.png" />
+</p>
+
+<p align="center">
+  <a href="https://x.com/ovryth/status/2101566323935363441"><img alt="Watch the Ovryth demo (3:30)" src="docs/media/demo-thumbnail.jpg" width="720" /></a>
 </p>
 
 ## At a glance
