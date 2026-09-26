@@ -178,7 +178,14 @@ async function handleContribution(msg: TgMessage, text: string): Promise<void> {
     if (res.status === "confirmed" && res.txHash) {
       await sendMessage(msg.chat.id, `Paid ${d.amountUsdc} USDC for ${d.categoryKey ?? "work"}. Reason: ${d.reasonText}. tx ${baseScanTx(res.txHash)}`, { replyToMessageId: msg.message_id });
     } else if (res.status === "reverted") {
-      await sendMessage(msg.chat.id, "This room's weekly budget is spent. The cap resets every 7 days.", { replyToMessageId: msg.message_id });
+      // Only blame the budget when the chain says the cap is the reason.
+      const capHit = /ExceededSpendPermission|exceed|allowance/i.test(res.error ?? "");
+      const note = capHit
+        ? "This room's weekly budget is spent. The cap resets every 7 days."
+        : res.error === "permission revoked" || res.error === "permission inactive"
+          ? "Approved, but this room's spend permission is not active, so nothing was paid."
+          : "Approved, but the payout could not be sent right now. Nothing was charged to the room.";
+      await sendMessage(msg.chat.id, note, { replyToMessageId: msg.message_id });
     }
     return;
   }
