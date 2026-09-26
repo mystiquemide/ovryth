@@ -142,7 +142,8 @@ async function handleContribution(msg: TgMessage, text: string): Promise<void> {
   const from = msg.from!;
   const member = await prisma.member.upsert({
     where: { roomId_telegramUserId: { roomId: room.id, telegramUserId: BigInt(from.id) } },
-    update: { username: from.username ?? null },
+    // Refresh the age estimate too, so a corrected estimator applies to existing members.
+    update: { username: from.username ?? null, approxAccountAgeDays: approxAccountAgeDaysFromUserId(BigInt(from.id)) },
     create: {
       roomId: room.id,
       telegramUserId: BigInt(from.id),

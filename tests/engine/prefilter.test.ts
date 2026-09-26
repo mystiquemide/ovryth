@@ -125,3 +125,19 @@ describe("account age approximation", () => {
     expect(newer).toBeGreaterThanOrEqual(0);
   });
 });
+
+describe("approxAccountAgeDaysFromUserId modern ids", () => {
+  const now = Date.parse("2026-09-26T00:00:00Z");
+  it("does not treat post-2021 accounts as brand new", () => {
+    // A ~2022 account (id 5.66B) must read as years old, not 0 days.
+    expect(approxAccountAgeDaysFromUserId(5_661_200_050n, now)).toBeGreaterThan(1000);
+  });
+  it("stays monotonic across the late-2021 id jump", () => {
+    const a = approxAccountAgeDaysFromUserId(2_000_000_000n, now);
+    const b = approxAccountAgeDaysFromUserId(5_500_000_000n, now);
+    const c = approxAccountAgeDaysFromUserId(8_300_000_000n, now);
+    expect(a).toBeGreaterThan(b);
+    expect(b).toBeGreaterThan(c);
+    expect(c).toBeGreaterThanOrEqual(0);
+  });
+});

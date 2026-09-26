@@ -141,12 +141,24 @@ export function isNearDuplicate(sim: bigint, priors: bigint[], maxHamming: numbe
  * in the UI) and is combined with first-seen tenure. Larger id => younger account.
  */
 export function approxAccountAgeDaysFromUserId(userId: bigint, nowMs: number = Date.now()): number {
-  // Two coarse public anchors (id, unix ms). Linear interpolation/extrapolation, clamped >= 0.
-  const A = { id: 100_000_000n, ms: Date.parse("2016-06-01T00:00:00Z") };
-  const B = { id: 1_500_000_000n, ms: Date.parse("2021-01-01T00:00:00Z") };
-  const idSpan = Number(B.id - A.id);
-  const msSpan = B.ms - A.ms;
-  const estMs = A.ms + ((Number(userId) - Number(A.id)) / idSpan) * msSpan;
+  // Coarse public anchors (id, signup date). Telegram jumped id ranges in late 2021, so a single
+  // straight line from 2016-2021 treats every modern account as brand new. Interpolate between
+  // anchors instead; past the last anchor, extrapolate at the last slope. Clamped >= 0.
+  const anchors: Array<[number, number]> = [
+    [100_000_000, Date.parse("2016-06-01T00:00:00Z")],
+    [1_500_000_000, Date.parse("2021-01-01T00:00:00Z")],
+    [2_100_000_000, Date.parse("2021-10-01T00:00:00Z")],
+    [5_000_000_000, Date.parse("2022-01-01T00:00:00Z")],
+    [6_000_000_000, Date.parse("2023-03-01T00:00:00Z")],
+    [7_000_000_000, Date.parse("2024-05-01T00:00:00Z")],
+    [8_000_000_000, Date.parse("2025-06-01T00:00:00Z")],
+  ];
+  const id = Number(userId);
+  let i = anchors.findIndex(([aid]) => id < aid);
+  if (i <= 0) i = i === 0 ? 1 : anchors.length - 1;
+  const [id0, ms0] = anchors[i - 1];
+  const [id1, ms1] = anchors[i];
+  const estMs = ms0 + ((id - id0) / (id1 - id0)) * (ms1 - ms0);
   const ageDays = (nowMs - estMs) / 86_400_000;
   return Math.max(0, Math.round(ageDays));
 }
