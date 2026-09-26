@@ -12,7 +12,7 @@
   <a href="https://nextjs.org"><img alt="Next.js 16" src="https://img.shields.io/badge/Next.js-16-000000?style=flat-square&logo=nextdotjs&logoColor=white" /></a>
   <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5-3178C6?style=flat-square&logo=typescript&logoColor=white" />
   <img alt="Solidity" src="https://img.shields.io/badge/Solidity-0.8.24-363636?style=flat-square&logo=solidity&logoColor=white" />
-  <a href="https://github.com/mystiquemide/ovryth/actions/workflows/ci.yml"><img alt="58 automated tests" src="https://img.shields.io/badge/tests-58%20automated-2EA44F?style=flat-square" /></a>
+  <a href="https://github.com/mystiquemide/ovryth/actions/workflows/ci.yml"><img alt="60 automated tests" src="https://img.shields.io/badge/tests-60%20automated-2EA44F?style=flat-square" /></a>
   <a href="#license"><img alt="MIT License" src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" /></a>
 </p>
 
@@ -59,7 +59,7 @@ Ovryth is a working AI agent with a real money path on Base mainnet.
 - Pays through a verified `OvrythPayer` contract using Coinbase Spend Permissions.
 - Records payouts, reverts, refusals, holds, rules versions, permission state, and public proof.
 - Supports owner onboarding, signed rule updates, pause/resume, onchain revocation, public room pages, proof, status, and autonomous sweeps.
-- Runs **51 Vitest tests + 7 Foundry Base-fork tests = 58 automated tests** in the current verified state.
+- Runs **53 Vitest tests + 7 Foundry Base-fork tests = 60 automated tests** in the current verified state.
 
 ## The problem
 
@@ -412,6 +412,7 @@ Permission read failures skip the room for that tick rather than assuming it is 
 | Claim | Evidence |
 |---|---|
 | Permission registration in proof payout | [`0x9d44d136...392270`](https://basescan.org/tx/0x9d44d136f7ab6e6988c8f5e17a2d2c5a0b2a744f7d96b12267fb082239392270) |
+| Live payout in the public demo room (2 USDC for a real answer) | [`0x70e20c42...0637b`](https://basescan.org/tx/0x70e20c42cdef263888e1d40105a972b83556a327fdd586c42c16eaee1360637b) |
 | Confirmed capped payout | [`0xdd81d096...4635a`](https://basescan.org/tx/0xdd81d096bfc7edcccda3a327549e8f14953c0c816b1021f90bf2cbd3fa34635a) |
 | Deliberate over-cap revert | [`0x2a0e8147...9436b`](https://basescan.org/tx/0x2a0e8147e07e9685d8a03443e86a7f605074d889a9d58361e7cb293d2429436b) |
 | Permission revoke | [`0x13994304...d2c96`](https://basescan.org/tx/0x139943041ac91448f6de842ec9151af6e71fa577a564fc82b202bd81ac6d2c96) |
@@ -421,11 +422,11 @@ Permission read failures skip the room for that tick rather than assuming it is 
 
 ## Tests
 
-Current verified suite: **58 automated tests**.
+Current verified suite: **60 automated tests**.
 
 | Area | Tests |
 |---|---:|
-| Prefilter | 17 |
+| Prefilter | 19 |
 | Engine | 6 |
 | Telegram handler | 7 |
 | Telegram wallet | 6 |
